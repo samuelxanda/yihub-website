@@ -1,0 +1,14 @@
+@media (min-width: 768px) {
+  .left-align-desktop {
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    margin-left: -2.5rem !important; /* -10 in Tailwind = -2.5rem */
+  }
+}
+
+@media (max-width: 767px) {
+  .left-align-desktop {
+    /* No override for mobile, keep default */
+  }
+}

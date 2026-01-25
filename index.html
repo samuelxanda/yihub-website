@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YIHUB | Youth Innovators Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="public/custom.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --brand-blue: #438CAF;
+        --dark-bg: #193441;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--dark-bg);
+        color: white;
+        overflow-x: hidden;
+      }
+      ::selection {
+        background-color: var(--brand-blue);
+        color: white;
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--dark-bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--brand-blue);
+        border-radius: 10px;
+        border: 2px solid var(--dark-bg);
+      }
+      @keyframes float {
+        0% { transform: translateY(0px) rotate(var(--tw-rotate, 0deg)); }
+        50% { transform: translateY(-10px) rotate(calc(var(--tw-rotate, 0deg) + 2deg)); }
+        100% { transform: translateY(0px) rotate(var(--tw-rotate, 0deg)); }
+      }
+      .animate-float {
+        animation: float 4s ease-in-out infinite;
+      }
+      .flag-hanging {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%);
+      }
+      .card-shadow {
+        box-shadow: 8px 8px 0px 0px rgba(67, 140, 175, 0.3);
+      }
+      .btn-shadow {
+        box-shadow: 4px 4px 0px 0px white;
+      }
+      .btn-shadow:hover {
+        box-shadow: 6px 6px 0px 0px white;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "framer-motion": "https://esm.sh/framer-motion@^11.11.11"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
