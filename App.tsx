@@ -270,7 +270,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
               onClick={() => scrollTo('build')}
               className="px-6 sm:px-8 md:px-10 py-4 md:py-5 bg-white/10 text-white font-black text-base sm:text-lg md:text-xl uppercase tracking-tighter rounded-xl border-2 border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2 md:gap-3"
             >
-              See Projects
+              See our programs
               <Gamepad size={20} className="md:w-6 md:h-6" />
             </button>
           </div>
