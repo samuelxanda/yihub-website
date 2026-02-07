@@ -1,0 +1,7 @@
+# Youth Innovators Hub (YIHUB)
+# https://youthinnovatorshub.tech
+
+User-agent: *
+Allow: /
+
+Sitemap: https://youthinnovatorshub.tech/sitemap.xml

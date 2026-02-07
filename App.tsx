@@ -131,27 +131,29 @@ const App: React.FC = () => {
       <header>
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3 md:py-4 flex items-center justify-between bg-[#193441]/90 backdrop-blur-xl border-b border-white/5" aria-label="Main navigation">
         {/* Logo inside navbar */}
-        <div 
-          onClick={() => scrollTo('home')}
-          className="cursor-pointer hover:scale-105 transition-all duration-300 flex-shrink-0"
+        <a 
+          href="#home"
+          onClick={(e) => { e.preventDefault(); scrollTo('home'); }}
+          className="cursor-pointer hover:scale-105 transition-all duration-300 flex-shrink-0 inline-block"
         >
           <img 
             src="/logo.png" 
             alt="Youth Innovators Hub (YIHUB) — Rwanda youth tech community" 
             className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain select-none"
           />
-        </div>
+        </a>
 
         <div className="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest">
           {['about', 'build','community'].map((id) => (
-            <button 
+            <a 
               key={id}
-              onClick={() => scrollTo(id)} 
+              href={`#${id}`}
+              onClick={(e) => { e.preventDefault(); scrollTo(id); }} 
               className={`group relative py-2 transition-all ${activeNav === id ? 'text-[#438CAF]' : 'text-white hover:text-[#438CAF]'}`}
             >
               {id === 'build' ? 'What We Do' : id.charAt(0).toUpperCase() + id.slice(1)}
               <span className={`absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform ${activeNav === id ? 'scale-x-100' : ''}`} />
-            </button>
+            </a>
           ))}
         </div>
         
@@ -194,13 +196,14 @@ const App: React.FC = () => {
             
             <div className="flex flex-col space-y-6 sm:space-y-8 mt-8">
               {['about', 'build','community'].map((id) => (
-                <button 
+                <a 
                   key={id}
-                  onClick={() => scrollTo(id)}
+                  href={`#${id}`}
+                  onClick={(e) => { e.preventDefault(); scrollTo(id); }}
                   className="text-3xl sm:text-4xl md:text-5xl font-black uppercase text-left tracking-tighter hover:text-[#438CAF] transition-colors"
                 >
                   {id === 'build' ? 'What We Do' : id.charAt(0).toUpperCase() + id.slice(1)}
-                </button>
+                </a>
               ))}
             </div>
             
@@ -269,13 +272,14 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
               Start Building
               <Zap fill="currentColor" size={20} className="md:w-6 md:h-6" />
             </a>
-            <button 
-              onClick={() => scrollTo('build')}
+            <a 
+              href="#build"
+              onClick={(e) => { e.preventDefault(); scrollTo('build'); }}
               className="px-6 sm:px-8 md:px-10 py-4 md:py-5 bg-white/10 text-white font-black text-base sm:text-lg md:text-xl uppercase tracking-tighter rounded-xl border-2 border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2 md:gap-3"
             >
               See our programs
               <Gamepad size={20} className="md:w-6 md:h-6" />
-            </button>
+            </a>
           </div>
         </div>
       </Section>
@@ -466,16 +470,17 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row justify-between gap-10 md:gap-12 lg:gap-16 mb-12 md:mb-16 lg:mb-20">
             <div className="max-w-md">
-               <div 
-          onClick={() => scrollTo('home')}
-          className="cursor-pointer hover:scale-105 transition-all duration-300 flex-shrink-0"
+               <a 
+          href="#home"
+          onClick={(e) => { e.preventDefault(); scrollTo('home'); }}
+          className="cursor-pointer hover:scale-105 transition-all duration-300 flex-shrink-0 inline-block"
         >
           <img 
             src="/logo.png" 
             alt="Youth Innovators Hub" 
             className="h-12 sm:h-12 md:h-14 lg:h-16 w-auto object-contain select-none"
           />
-        </div>
+        </a>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white/50 mb-6 md:mb-8 leading-tight italic">
                 Youth Innovators Hub — Rwanda's youth tech community where student builders ship real projects.
               </p>
@@ -525,19 +530,20 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
             <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 lg:gap-16 text-[10px] sm:text-xs md:text-sm font-black uppercase tracking-wider md:tracking-widest">
               <div className="space-y-3 md:space-y-4 lg:space-y-6">
                 <span className="text-[#438CAF] block mb-2 md:mb-4 opacity-100">Hub</span>
-                <button onClick={() => scrollTo('about')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">About</button>
-                <button onClick={() => scrollTo('build')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Programs</button>
-                <button onClick={() => scrollTo('community')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Community</button>
-                <button onClick={() => scrollTo('cta')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Join</button>
+                <a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">About</a>
+                <a href="#build" onClick={(e) => { e.preventDefault(); scrollTo('build'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Programs</a>
+                <a href="#community" onClick={(e) => { e.preventDefault(); scrollTo('community'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Community</a>
+                <a href="#cta" onClick={(e) => { e.preventDefault(); scrollTo('cta'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Join</a>
               </div>
               <div className="space-y-3 md:space-y-4 lg:space-y-6 col-span-1 md:col-span-1">
                 <span className="text-[#438CAF] block mb-2 md:mb-4 opacity-100">Connect</span>
-                <button
+                <a
+                  href="#contact"
                   className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all"
-                  onClick={() => setShowContactModal(true)}
+                  onClick={(e) => { e.preventDefault(); setShowContactModal(true); }}
                 >
                   Send a message
-                </button>
+                </a>
                 <a href="https://www.instagram.com/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Instagram</a>
                 <a href="https://www.linkedin.com/company/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">LinkedIn</a>
               </div>
@@ -545,7 +551,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
           </div>
           
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 md:pt-12 border-t border-white/5 text-[9px] sm:text-[10px] md:text-xs font-black uppercase tracking-widest md:tracking-[0.3em] opacity-30 italic">
-            <div className="md:mt-0">&copy; 2024–2026 YOUTH INNOVATORS HUB (YIHUB). RWANDA.</div>
+            <div className="md:mt-0">&copy;2026 YOUTH INNOVATORS HUB (YIHUB).</div>
           </div>
         </div>
       </footer>
