@@ -12,7 +12,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import ShowcaseLayout from '../components/ShowcaseLayout';
-import { getEventWithProjects } from '../lib/api';
+import { getEventWithProjects, checkRegistration } from '../lib/api';
 import type { EventSummary } from '../lib/showcase-types';
 
 const API = '/.netlify/functions';
@@ -64,6 +64,31 @@ const ProjectSubmissionPage: React.FC = () => {
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<string[]>([]);
   const [submissionClosed, setSubmissionClosed] = useState(false);
+
+  // Registration verification gate
+  const [verifyEmail, setVerifyEmail] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [verified, setVerified] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setVerifyError(null);
+    setVerifying(true);
+    try {
+      const isRegistered = await checkRegistration(eventSlug!, verifyEmail.trim());
+      if (isRegistered) {
+        setVerified(true);
+        setTeamLeadEmail(verifyEmail.trim().toLowerCase());
+      } else {
+        setVerifyError('This email is not registered for this event. You must register before submitting a project.');
+      }
+    } catch {
+      setVerifyError('Could not verify registration. Please try again.');
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   useEffect(() => {
     if (!eventSlug) return;
@@ -260,7 +285,96 @@ const ProjectSubmissionPage: React.FC = () => {
     );
   }
 
-  // ── Form ──────────────────────────────────────────────
+  // ── Registration verification gate ────────────────────
+  if (!verified) {
+    return (
+      <ShowcaseLayout>
+        <div className="px-4 md:px-8 lg:px-16 pt-6">
+          <div className="max-w-2xl mx-auto">
+            <Link
+              to={`/events/${eventSlug}`}
+              className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/40 hover:text-[#438CAF] transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to {event.name}
+            </Link>
+          </div>
+        </div>
+
+        <section className="px-4 md:px-8 lg:px-16 pt-8 pb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="max-w-md mx-auto"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <Upload className="w-6 h-6 text-[#438CAF]" />
+              <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight">
+                Submit Project
+              </h1>
+            </div>
+            <p className="text-white/50 text-sm mb-8">
+              To submit a project for <span className="text-[#438CAF] font-bold">{event.name}</span>, you must first be a registered participant.
+            </p>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+              <p className="text-xs font-black uppercase tracking-widest text-white/60 mb-4">
+                Verify Your Registration
+              </p>
+              <form onSubmit={handleVerify} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-white/50 mb-1.5">
+                    Your Registered Email <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={verifyEmail}
+                    onChange={(e) => { setVerifyEmail(e.target.value); setVerifyError(null); }}
+                    className={inputClass}
+                    placeholder="Enter the email you registered with"
+                  />
+                </div>
+
+                {verifyError && (
+                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-sm">
+                    <p className="text-red-400 font-bold text-xs mb-2">{verifyError}</p>
+                    <Link
+                      to={`/events/${eventSlug}/register`}
+                      className="inline-flex items-center gap-1.5 text-[#438CAF] text-xs font-black uppercase tracking-widest hover:underline"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5" /> Register for this event first
+                    </Link>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={verifying}
+                  className="w-full py-3 rounded-full bg-[#438CAF] text-white text-sm font-black uppercase tracking-widest hover:bg-[#438CAF]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {verifying ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Checking…</>
+                  ) : (
+                    <><ShieldAlert className="w-4 h-4" /> Verify &amp; Continue</>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            <p className="text-center text-white/30 text-xs mt-6">
+              Not registered yet?{' '}
+              <Link to={`/events/${eventSlug}/register`} className="text-[#438CAF] font-bold hover:underline">
+                Register here
+              </Link>
+            </p>
+          </motion.div>
+        </section>
+      </ShowcaseLayout>
+    );
+  }
+
+  // ── Form (shown only after registration is verified) ──
   return (
     <ShowcaseLayout>
       {/* Breadcrumb */}
@@ -288,8 +402,11 @@ const ProjectSubmissionPage: React.FC = () => {
               Submit Project
             </h1>
           </div>
-          <p className="text-white/50 text-sm mb-8">
+          <p className="text-white/50 text-sm mb-2">
             Submit your project for <span className="text-[#438CAF] font-bold">{event.name}</span>. It will be reviewed by our team before appearing publicly.
+          </p>
+          <p className="text-xs text-emerald-400/70 font-bold mb-8 flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Verified as {teamLeadEmail}
           </p>
 
           {formError && (
@@ -311,17 +428,15 @@ const ProjectSubmissionPage: React.FC = () => {
 
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-white/60 mb-1.5">
-                Team Lead Email <span className="text-red-400">*</span>
+                Team Lead Email
               </label>
               <input
                 type="email"
-                required
                 value={teamLeadEmail}
-                onChange={(e) => setTeamLeadEmail(e.target.value)}
-                className={inputClass}
-                placeholder="lead@school.edu"
+                readOnly
+                className={`${inputClass} opacity-60 cursor-not-allowed`}
               />
-              <p className="text-[10px] text-white/30 mt-1">You'll be the project contact. Staff may reach out via this email.</p>
+              <p className="text-[10px] text-white/30 mt-1">Verified from your registration. This cannot be changed.</p>
             </div>
 
             <div>

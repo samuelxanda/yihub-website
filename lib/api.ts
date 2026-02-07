@@ -63,3 +63,15 @@ export async function getSchoolProjects(
   );
   return data;
 }
+
+// ─── Registration check ─────────────────────────────────
+
+export async function checkRegistration(
+  eventSlug: string,
+  email: string
+): Promise<boolean> {
+  const data = await fetchJSON<{ registered: boolean }>(
+    `${API}/check-registration?eventSlug=${encodeURIComponent(eventSlug)}&email=${encodeURIComponent(email)}`
+  );
+  return data.registered;
+}
