@@ -83,6 +83,56 @@ export async function fetchRecords(
   return allRecords;
 }
 
+/* ── Project field helpers ──────────────────────────────── */
+
+/** All Project-table fields we ever need. */
+export const PROJECT_FIELDS = [
+  'title', 'slug', 'category',
+  'shortDescription', 'fullDescription',
+  'projectUrl', 'githubUrl', 'thumbnailUrl',
+  'school', 'staffNotes', 'teamMemberEmails',
+  'submittedAt', 'teamLeadEmail',
+  'event',
+];
+
+/**
+ * Auto-detect whether a project record's columns are still
+ * shifted by one (missing shortDescription) and return a
+ * normalised field map that always has the right values.
+ */
+export function normaliseProject(f: Record<string, any>) {
+  const shifted =
+    typeof f.school === 'string' && f.school.startsWith('http');
+
+  if (shifted) {
+    return {
+      shortDescription: f.fullDescription ?? '',
+      fullDescription:  f.projectUrl ?? null,
+      projectUrl:       f.githubUrl ?? null,
+      githubUrl:        f.thumbnailUrl ?? null,
+      thumbnailUrl:     f.school ?? null,
+      school:           null,
+      submittedAt:      f.staffNotes ?? null,
+      teamLeadEmail:    f.teamMemberEmails ?? null,
+      teamMemberEmails: null,
+      staffNotes:       null,
+    };
+  }
+
+  return {
+    shortDescription: f.shortDescription ?? '',
+    fullDescription:  f.fullDescription ?? null,
+    projectUrl:       f.projectUrl ?? null,
+    githubUrl:        f.githubUrl ?? null,
+    thumbnailUrl:     f.thumbnailUrl ?? null,
+    school:           f.school ?? null,
+    submittedAt:      f.submittedAt ?? null,
+    teamLeadEmail:    f.teamLeadEmail ?? null,
+    teamMemberEmails: f.teamMemberEmails ?? null,
+    staffNotes:       f.staffNotes ?? null,
+  };
+}
+
 /**
  * Standard cache headers for public GET responses (5 minutes).
  */
