@@ -56,11 +56,17 @@ const handler: Handler = async (event) => {
       coverImageUrl: eventRec.fields.coverImageUrl ?? null,
     };
 
-    // 2. Fetch approved projects linked to this event
-    const projectRecords = await fetchRecords(TABLE_PROJECTS, {
-      filterByFormula: `AND(FIND("${eventRec.id}", ARRAYJOIN(event)), {status} = "Approved")`,
+    // 2. Fetch approved projects, then filter by event link in JS
+    //    (ARRAYJOIN doesn't work on linked-record fields in Airtable API filters)
+    const allApproved = await fetchRecords(TABLE_PROJECTS, {
+      filterByFormula: `{status} = "Approved"`,
       sort: [{ field: 'title', direction: 'asc' }],
-      fields: PROJECT_FIELDS,
+      fields: [...PROJECT_FIELDS, 'event'],
+    });
+
+    const projectRecords = allApproved.filter((r) => {
+      const linked: string[] = (r.fields.event as string[]) ?? [];
+      return linked.includes(eventRec.id);
     });
 
     const projects = projectRecords.map((r) => {

@@ -23,22 +23,28 @@ const handler: Handler = async (event) => {
       fields: PROJECT_FIELDS,
     });
 
-    const projects = records.map((r) => {
-      const n = normaliseProject(r.fields);
-      return {
-        id: r.id,
-        title: r.fields.title,
-        slug: r.fields.slug,
-        category: r.fields.category ?? [],
-        shortDescription: n.shortDescription,
-        projectUrl: n.projectUrl,
-        thumbnailUrl: n.thumbnailUrl,
-        school: n.school,
-        submittedAt: n.submittedAt,
-      };
-    });
+    // Filter by school name (slug-ified comparison)
+    const toSlug = (s: string) =>
+      s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-    const schoolName = schoolSlug;
+    const projects = records
+      .map((r) => {
+        const n = normaliseProject(r.fields);
+        return {
+          id: r.id,
+          title: r.fields.title,
+          slug: r.fields.slug,
+          category: r.fields.category ?? [],
+          shortDescription: n.shortDescription,
+          projectUrl: n.projectUrl,
+          thumbnailUrl: n.thumbnailUrl,
+          school: n.school,
+          submittedAt: n.submittedAt,
+        };
+      })
+      .filter((p) => toSlug(p.school ?? '') === schoolSlug);
+
+    const schoolName = projects[0]?.school ?? schoolSlug;
 
     return {
       statusCode: 200,
