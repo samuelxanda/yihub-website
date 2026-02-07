@@ -18,6 +18,10 @@ const handler: Handler = async (event) => {
 
   try {
     // 1. Fetch project by slug (only if Approved)
+    //
+    // IMPORTANT: The Airtable column names are shifted compared to
+    // the frontend property names. We request the real Airtable
+    // field names and remap below.
     const projectRecords = await fetchRecords(TABLE_PROJECTS, {
       filterByFormula: `AND({slug} = "${slug}", {status} = "Approved")`,
       maxRecords: 1,
@@ -25,15 +29,14 @@ const handler: Handler = async (event) => {
         'title',
         'slug',
         'category',
-        'shortDescription',
-        'fullDescription',
-        'projectUrl',
-        'githubUrl',
-        'thumbnailUrl',
-        'school',
-        'teamLeadEmail',
-        'teamMemberEmails',
-        'submittedAt',
+        'fullDescription',   // actually holds shortDescription
+        'projectUrl',         // actually holds fullDescription
+        'githubUrl',          // actually holds projectUrl
+        'thumbnailUrl',       // actually holds githubUrl
+        'school',             // actually holds thumbnailUrl
+        'staffNotes',         // actually holds submittedAt
+        'teamLeadEmail',      // actually holds staffNotes (unused)
+        'teamMemberEmails',   // actually holds teamLeadEmail
         'event',
       ],
     });
@@ -46,11 +49,11 @@ const handler: Handler = async (event) => {
       };
     }
 
-    const projRec = projectRecords[0];
+    const f = projectRecords[0].fields;
 
     // 2. Resolve linked event
     let eventData = null;
-    const eventIds: string[] = projRec.fields.event ?? [];
+    const eventIds: string[] = f.event ?? [];
     if (eventIds.length > 0) {
       const eventRecords = await fetchRecords(TABLE_EVENTS, {
         filterByFormula: `RECORD_ID() = "${eventIds[0]}"`,
@@ -66,20 +69,21 @@ const handler: Handler = async (event) => {
       }
     }
 
+    // Remap shifted Airtable columns → correct frontend fields
     const project = {
-      id: projRec.id,
-      title: projRec.fields.title,
-      slug: projRec.fields.slug,
-      category: projRec.fields.category ?? [],
-      shortDescription: projRec.fields.shortDescription ?? '',
-      fullDescription: projRec.fields.fullDescription ?? null,
-      projectUrl: projRec.fields.projectUrl ?? null,
-      githubUrl: projRec.fields.githubUrl ?? null,
-      thumbnailUrl: projRec.fields.thumbnailUrl ?? null,
-      school: projRec.fields.school ?? null,
-      teamLeadEmail: projRec.fields.teamLeadEmail ?? null,
-      teamMemberEmails: projRec.fields.teamMemberEmails ?? null,
-      submittedAt: projRec.fields.submittedAt ?? null,
+      id: projectRecords[0].id,
+      title: f.title,
+      slug: f.slug,
+      category: f.category ?? [],
+      shortDescription: f.fullDescription ?? '',
+      fullDescription: f.projectUrl ?? null,
+      projectUrl: f.githubUrl ?? null,
+      githubUrl: f.thumbnailUrl ?? null,
+      thumbnailUrl: f.school ?? null,
+      school: null,
+      teamLeadEmail: f.teamMemberEmails ?? null,
+      teamMemberEmails: null,
+      submittedAt: f.staffNotes ?? null,
       event: eventData,
     };
 

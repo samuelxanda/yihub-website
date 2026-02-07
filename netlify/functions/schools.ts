@@ -7,28 +7,10 @@ import { fetchRecords, TABLE_PROJECTS, jsonHeaders } from './utils/airtable';
  */
 const handler: Handler = async () => {
   try {
-    const records = await fetchRecords(TABLE_PROJECTS, {
-      filterByFormula: `{status} = "Approved"`,
-      fields: ['school'],
-    });
-
-    const schoolSet = new Set<string>();
-    for (const r of records) {
-      const school = r.fields.school;
-      if (school && typeof school === 'string' && school.trim()) {
-        schoolSet.add(school.trim());
-      }
-    }
-
-    const schools = Array.from(schoolSet)
-      .sort()
-      .map((name) => ({
-        name,
-        slug: name
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, ''),
-      }));
+    // NOTE: The Airtable 'school' column actually holds thumbnailUrl
+    // due to shifted columns. There is no dedicated school column.
+    // We return an empty list until the Airtable schema is fixed.
+    const schools: { name: string; slug: string }[] = [];
 
     return {
       statusCode: 200,

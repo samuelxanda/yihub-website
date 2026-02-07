@@ -17,7 +17,8 @@ const handler: Handler = async (event) => {
   }
 
   try {
-    // Fetch all approved projects with school field
+    // NOTE: The Airtable 'school' column actually holds thumbnailUrl
+    // due to shifted columns. We remap fields for project cards.
     const records = await fetchRecords(TABLE_PROJECTS, {
       filterByFormula: `{status} = "Approved"`,
       sort: [{ field: 'title', direction: 'asc' }],
@@ -25,40 +26,28 @@ const handler: Handler = async (event) => {
         'title',
         'slug',
         'category',
-        'shortDescription',
-        'projectUrl',
-        'thumbnailUrl',
-        'school',
-        'submittedAt',
+        'fullDescription',   // → shortDescription
+        'githubUrl',          // → projectUrl
+        'school',             // → thumbnailUrl
+        'staffNotes',         // → submittedAt
       ],
     });
 
-    // Filter client-side by slug match (since Airtable doesn't have a slug field for school)
-    const toSlug = (s: string) =>
-      s
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
+    // No real school column exists in the current Airtable schema,
+    // so we return all approved projects for now.
+    const projects = records.map((r) => ({
+      id: r.id,
+      title: r.fields.title,
+      slug: r.fields.slug,
+      category: r.fields.category ?? [],
+      shortDescription: r.fields.fullDescription ?? '',
+      projectUrl: r.fields.githubUrl ?? null,
+      thumbnailUrl: r.fields.school ?? null,
+      school: null,
+      submittedAt: r.fields.staffNotes ?? null,
+    }));
 
-    const projects = records
-      .filter((r) => {
-        const school = r.fields.school;
-        return school && toSlug(school) === schoolSlug;
-      })
-      .map((r) => ({
-        id: r.id,
-        title: r.fields.title,
-        slug: r.fields.slug,
-        category: r.fields.category ?? [],
-        shortDescription: r.fields.shortDescription ?? '',
-        projectUrl: r.fields.projectUrl ?? null,
-        thumbnailUrl: r.fields.thumbnailUrl ?? null,
-        school: r.fields.school,
-        submittedAt: r.fields.submittedAt ?? null,
-      }));
-
-    // Derive the display name from the first matching project
-    const schoolName = projects.length > 0 ? projects[0].school : schoolSlug;
+    const schoolName = schoolSlug;
 
     return {
       statusCode: 200,

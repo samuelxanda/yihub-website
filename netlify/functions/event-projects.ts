@@ -57,6 +57,9 @@ const handler: Handler = async (event) => {
     };
 
     // 2. Fetch approved projects linked to this event
+    //
+    // Airtable columns are shifted: fullDescription holds shortDescription,
+    // projectUrl holds fullDescription, githubUrl holds projectUrl, etc.
     const projectRecords = await fetchRecords(TABLE_PROJECTS, {
       filterByFormula: `AND(FIND("${eventRec.id}", ARRAYJOIN(event)), {status} = "Approved")`,
       sort: [{ field: 'title', direction: 'asc' }],
@@ -64,12 +67,10 @@ const handler: Handler = async (event) => {
         'title',
         'slug',
         'category',
-        'shortDescription',
-        'projectUrl',
-        'thumbnailUrl',
-        'school',
-        'teamLeadEmail',
-        'submittedAt',
+        'fullDescription',   // → shortDescription
+        'githubUrl',          // → projectUrl
+        'school',             // → thumbnailUrl
+        'staffNotes',         // → submittedAt
       ],
     });
 
@@ -78,11 +79,11 @@ const handler: Handler = async (event) => {
       title: r.fields.title,
       slug: r.fields.slug,
       category: r.fields.category ?? [],
-      shortDescription: r.fields.shortDescription ?? '',
-      projectUrl: r.fields.projectUrl ?? null,
-      thumbnailUrl: r.fields.thumbnailUrl ?? null,
-      school: r.fields.school ?? null,
-      submittedAt: r.fields.submittedAt ?? null,
+      shortDescription: r.fields.fullDescription ?? '',
+      projectUrl: r.fields.githubUrl ?? null,
+      thumbnailUrl: r.fields.school ?? null,
+      school: null,
+      submittedAt: r.fields.staffNotes ?? null,
     }));
 
     return {
