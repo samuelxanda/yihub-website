@@ -1,7 +1,14 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
+import ActivityPage from './pages/ActivityPage';
+import EventsPage from './pages/EventsPage';
+import EventDetailPage from './pages/EventDetailPage';
+import ProjectDetailPage from './pages/ProjectDetailPage';
+import SchoolsPage from './pages/SchoolsPage';
+import SchoolDetailPage from './pages/SchoolDetailPage';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -11,6 +18,18 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        {/* Showcase feature routes — must sit above the catch-all */}
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/events/:eventSlug" element={<EventDetailPage />} />
+        <Route path="/projects/:projectSlug" element={<ProjectDetailPage />} />
+        <Route path="/schools" element={<SchoolsPage />} />
+        <Route path="/schools/:schoolSlug" element={<SchoolDetailPage />} />
+        {/* Activity pages (catch-all slug) — must be last */}
+        <Route path="/:slug" element={<ActivityPage />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );

@@ -27,9 +27,11 @@ import {
   Linkedin
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import Section from './components/Section';
 import Sticker from './components/Sticker';
 import { ACHIEVEMENTS, ACTIVITIES, UPCOMING_EVENTS } from './constants';
+import { useLocation } from 'react-router-dom';
 
 const App: React.FC = () => {
   const [activeNav, setActiveNav] = useState('home');
@@ -38,6 +40,25 @@ const App: React.FC = () => {
   const [contactName, setContactName] = useState('');
   const [contactMessage, setContactMessage] = useState('');
 
+  const location = useLocation();
+
+  // Handle hash-based scrolling (e.g. when navigating from /#about on activity pages)
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          window.scrollTo({
+            top: element.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -155,6 +176,13 @@ const App: React.FC = () => {
               <span className={`absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform ${activeNav === id ? 'scale-x-100' : ''}`} />
             </a>
           ))}
+          <Link
+            to="/events"
+            className="group relative py-2 transition-all text-white hover:text-[#438CAF]"
+          >
+            Events
+            <span className="absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform" />
+          </Link>
         </div>
         
         <div className="flex items-center gap-4">
@@ -205,6 +233,13 @@ const App: React.FC = () => {
                   {id === 'build' ? 'What We Do' : id.charAt(0).toUpperCase() + id.slice(1)}
                 </a>
               ))}
+              <Link
+                to="/events"
+                onClick={() => setIsMenuOpen(false)}
+                className="text-3xl sm:text-4xl md:text-5xl font-black uppercase text-left tracking-tighter hover:text-[#438CAF] transition-colors"
+              >
+                Events
+              </Link>
             </div>
             
             {/* Mobile CTA */}
@@ -333,15 +368,15 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
       <Section id="build" title="So..... what happens here?">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {[
-            { title: "Hackathons", desc: "Pure creation, caffeine, and zero sleep. Build fast, learn faster", icon: Flame, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "Workshops", desc: "Practical skills for the modern builder. Hands-on, no boring slides", icon: Terminal, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "CodeLift", desc: "Our outreach program bringing hands-on coding and tech skills to secondary school students across Rwanda.", icon: Rocket, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "Showcase", desc: "Flex your projects and get feedback from pros.", icon: Trophy, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "Meetups", desc: "Hang out with people who get your nerdy jokes.", icon: Coffee, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "Tech Talks", desc: "Real people, real stories.", icon: Podcast, color: "bg-[#438CAF]/30 backdrop-blur-md" }
+            { title: "Hackathons", slug: "hackathons", desc: "Pure creation, caffeine, and zero sleep. Build fast, learn faster", icon: Flame, color: "bg-[#438CAF]/30 backdrop-blur-md" },
+            { title: "Workshops", slug: "workshops", desc: "Practical skills for the modern builder. Hands-on, no boring slides", icon: Terminal, color: "bg-[#438CAF]/30 backdrop-blur-md" },
+            { title: "CodeLift", slug: "codelift", desc: "Our outreach program bringing hands-on coding and tech skills to secondary school students across Rwanda.", icon: Rocket, color: "bg-[#438CAF]/30 backdrop-blur-md" },
+            { title: "Showcase", slug: "showcase", desc: "Flex your projects and get feedback from pros.", icon: Trophy, color: "bg-[#438CAF]/30 backdrop-blur-md" },
+            { title: "Meetups", slug: "meetups", desc: "Hang out with people who get your nerdy jokes.", icon: Coffee, color: "bg-[#438CAF]/30 backdrop-blur-md" },
+            { title: "Tech Talks", slug: "tech-talks", desc: "Real people, real stories.", icon: Podcast, color: "bg-[#438CAF]/30 backdrop-blur-md" }
           ].map((activity, idx) => (
+            <Link key={idx} to={`/${activity.slug}`} className="block">
             <motion.div 
-              key={idx}
               whileHover={{ y: -10 }}
               className={`${activity.color} p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-[2rem] lg:rounded-[2.5rem] relative group overflow-hidden flex flex-col justify-between min-h-[240px] md:min-h-[280px] lg:min-h-[300px] shadow-xl md:shadow-2xl`}
             >
@@ -360,6 +395,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
                 {idx + 1}
               </div>
             </motion.div>
+            </Link>
           ))}
         </div>
       </Section>
@@ -532,6 +568,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
                 <span className="text-[#438CAF] block mb-2 md:mb-4 opacity-100">Hub</span>
                 <a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">About</a>
                 <a href="#build" onClick={(e) => { e.preventDefault(); scrollTo('build'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Programs</a>
+                <Link to="/events" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Events</Link>
                 <a href="#community" onClick={(e) => { e.preventDefault(); scrollTo('community'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Community</a>
                 <a href="#cta" onClick={(e) => { e.preventDefault(); scrollTo('cta'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Join</a>
               </div>

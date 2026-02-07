@@ -7,8 +7,3 @@
   }
 }
 
-@media (max-width: 767px) {
-  .left-align-desktop {
-    /* No override for mobile, keep default */
-  }
-}
