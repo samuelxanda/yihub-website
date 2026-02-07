@@ -14,6 +14,7 @@ import {
 import ShowcaseLayout from '../components/ShowcaseLayout';
 import { getEventWithProjects, checkRegistration } from '../lib/api';
 import type { EventSummary } from '../lib/showcase-types';
+import { SCHOOL_OPTIONS } from '../lib/schools';
 
 const API = '/.netlify/functions';
 
@@ -481,15 +482,30 @@ const ProjectSubmissionPage: React.FC = () => {
               <label className="block text-xs font-black uppercase tracking-widest text-white/60 mb-1.5">
                 School / Institution <span className="text-red-400">*</span>
               </label>
-              <input
-                type="text"
+              <select
                 required
-                minLength={2}
-                value={school}
-                onChange={(e) => setSchool(e.target.value)}
+                value={SCHOOL_OPTIONS.includes(school as any) ? school : school === '' ? '' : '__other__'}
+                onChange={(e) => setSchool(e.target.value === '__other__' ? '' : e.target.value)}
                 className={inputClass}
-                placeholder="e.g. University of Rwanda"
-              />
+                style={{ colorScheme: 'dark' }}
+              >
+                <option value="" disabled>Select your school…</option>
+                {SCHOOL_OPTIONS.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+                <option value="__other__">Other (type below)</option>
+              </select>
+              {!SCHOOL_OPTIONS.includes(school as any) && (
+                <input
+                  type="text"
+                  required
+                  minLength={2}
+                  value={school}
+                  onChange={(e) => setSchool(e.target.value)}
+                  className={`${inputClass} mt-2`}
+                  placeholder="Enter your school / institution name"
+                />
+              )}
             </div>
 
             <hr className="border-white/10" />
