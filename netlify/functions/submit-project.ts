@@ -187,10 +187,14 @@ const handler: Handler = async (event) => {
     };
   } catch (err: any) {
     console.error('submit-project error:', err);
+    // Surface a useful message instead of a generic one
+    const msg = err.message?.includes('Airtable')
+      ? `Submission failed: ${err.message}`
+      : 'Project submission failed. Please try again.';
     return {
       statusCode: 500,
       headers: writeHeaders(),
-      body: JSON.stringify({ error: 'Project submission failed. Please try again.' }),
+      body: JSON.stringify({ error: msg }),
     };
   }
 };

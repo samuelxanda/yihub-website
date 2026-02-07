@@ -168,6 +168,7 @@ export function writeHeaders() {
 
 /**
  * Create a single record in an Airtable table. Returns the created record.
+ * typecast=true lets Airtable auto-create new multi-select options etc.
  */
 export async function createRecord(
   table: string,
@@ -180,7 +181,7 @@ export async function createRecord(
       Authorization: `Bearer ${AIRTABLE_TOKEN}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ fields }),
+    body: JSON.stringify({ fields, typecast: true }),
   });
 
   if (!res.ok) {
