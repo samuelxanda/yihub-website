@@ -1,5 +1,5 @@
 import type { Handler } from '@netlify/functions';
-import { fetchRecords, TABLE_PROJECTS, jsonHeaders } from './utils/airtable';
+import { fetchRecords, TABLE_PROJECTS, jsonHeaders, PROJECT_FIELDS, normaliseProject } from './utils/airtable';
 
 /**
  * GET /.netlify/functions/school-projects?school=school-slug
@@ -17,35 +17,26 @@ const handler: Handler = async (event) => {
   }
 
   try {
-    // NOTE: The Airtable 'school' column actually holds thumbnailUrl
-    // due to shifted columns. We remap fields for project cards.
     const records = await fetchRecords(TABLE_PROJECTS, {
       filterByFormula: `{status} = "Approved"`,
       sort: [{ field: 'title', direction: 'asc' }],
-      fields: [
-        'title',
-        'slug',
-        'category',
-        'shortDescription',   // ✅ now correct
-        'githubUrl',           // → projectUrl
-        'school',              // → thumbnailUrl
-        'staffNotes',          // → submittedAt
-      ],
+      fields: PROJECT_FIELDS,
     });
 
-    // No real school column exists in the current Airtable schema,
-    // so we return all approved projects for now.
-    const projects = records.map((r) => ({
-      id: r.id,
-      title: r.fields.title,
-      slug: r.fields.slug,
-      category: r.fields.category ?? [],
-      shortDescription: r.fields.shortDescription ?? '',
-      projectUrl: r.fields.githubUrl ?? null,
-      thumbnailUrl: r.fields.school ?? null,
-      school: null,
-      submittedAt: r.fields.staffNotes ?? null,
-    }));
+    const projects = records.map((r) => {
+      const n = normaliseProject(r.fields);
+      return {
+        id: r.id,
+        title: r.fields.title,
+        slug: r.fields.slug,
+        category: r.fields.category ?? [],
+        shortDescription: n.shortDescription,
+        projectUrl: n.projectUrl,
+        thumbnailUrl: n.thumbnailUrl,
+        school: n.school,
+        submittedAt: n.submittedAt,
+      };
+    });
 
     const schoolName = schoolSlug;
 

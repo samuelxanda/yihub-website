@@ -1,5 +1,5 @@
 import type { Handler } from '@netlify/functions';
-import { fetchRecords, TABLE_PROJECTS, TABLE_EVENTS, jsonHeaders } from './utils/airtable';
+import { fetchRecords, TABLE_PROJECTS, TABLE_EVENTS, jsonHeaders, PROJECT_FIELDS, normaliseProject } from './utils/airtable';
 
 /**
  * GET /.netlify/functions/project?slug=my-project-slug
@@ -17,27 +17,10 @@ const handler: Handler = async (event) => {
   }
 
   try {
-    // 1. Fetch project by slug (only if Approved)
-    //
-    // IMPORTANT: Airtable columns after shortDescription are still
-    // shifted by one position. shortDescription is now its own column.
     const projectRecords = await fetchRecords(TABLE_PROJECTS, {
       filterByFormula: `AND({slug} = "${slug}", {status} = "Approved")`,
       maxRecords: 1,
-      fields: [
-        'title',
-        'slug',
-        'category',
-        'shortDescription',   // ✅ now correct
-        'fullDescription',     // actually holds old short desc (ignored)
-        'projectUrl',          // actually holds fullDescription
-        'githubUrl',           // actually holds projectUrl
-        'thumbnailUrl',        // actually holds githubUrl
-        'school',              // actually holds thumbnailUrl
-        'staffNotes',          // actually holds submittedAt
-        'teamMemberEmails',    // actually holds teamLeadEmail
-        'event',
-      ],
+      fields: PROJECT_FIELDS,
     });
 
     if (projectRecords.length === 0) {
@@ -68,21 +51,13 @@ const handler: Handler = async (event) => {
       }
     }
 
-    // Remap shifted Airtable columns → correct frontend fields
+    const n = normaliseProject(f);
     const project = {
       id: projectRecords[0].id,
       title: f.title,
       slug: f.slug,
       category: f.category ?? [],
-      shortDescription: f.shortDescription ?? '',
-      fullDescription: f.projectUrl ?? null,
-      projectUrl: f.githubUrl ?? null,
-      githubUrl: f.thumbnailUrl ?? null,
-      thumbnailUrl: f.school ?? null,
-      school: null,
-      teamLeadEmail: f.teamMemberEmails ?? null,
-      teamMemberEmails: null,
-      submittedAt: f.staffNotes ?? null,
+      ...n,
       event: eventData,
     };
 

@@ -1,5 +1,5 @@
 import type { Handler } from '@netlify/functions';
-import { fetchRecords, TABLE_EVENTS, TABLE_PROJECTS, jsonHeaders } from './utils/airtable';
+import { fetchRecords, TABLE_EVENTS, TABLE_PROJECTS, jsonHeaders, PROJECT_FIELDS, normaliseProject } from './utils/airtable';
 
 /**
  * GET /.netlify/functions/event-projects?slug=my-event-slug
@@ -57,34 +57,26 @@ const handler: Handler = async (event) => {
     };
 
     // 2. Fetch approved projects linked to this event
-    //
-    // Airtable columns are shifted: fullDescription holds shortDescription,
-    // projectUrl holds fullDescription, githubUrl holds projectUrl, etc.
     const projectRecords = await fetchRecords(TABLE_PROJECTS, {
       filterByFormula: `AND(FIND("${eventRec.id}", ARRAYJOIN(event)), {status} = "Approved")`,
       sort: [{ field: 'title', direction: 'asc' }],
-      fields: [
-        'title',
-        'slug',
-        'category',
-        'shortDescription',   // ✅ now correct
-        'githubUrl',           // → projectUrl
-        'school',              // → thumbnailUrl
-        'staffNotes',          // → submittedAt
-      ],
+      fields: PROJECT_FIELDS,
     });
 
-    const projects = projectRecords.map((r) => ({
-      id: r.id,
-      title: r.fields.title,
-      slug: r.fields.slug,
-      category: r.fields.category ?? [],
-      shortDescription: r.fields.shortDescription ?? '',
-      projectUrl: r.fields.githubUrl ?? null,
-      thumbnailUrl: r.fields.school ?? null,
-      school: null,
-      submittedAt: r.fields.staffNotes ?? null,
-    }));
+    const projects = projectRecords.map((r) => {
+      const n = normaliseProject(r.fields);
+      return {
+        id: r.id,
+        title: r.fields.title,
+        slug: r.fields.slug,
+        category: r.fields.category ?? [],
+        shortDescription: n.shortDescription,
+        projectUrl: n.projectUrl,
+        thumbnailUrl: n.thumbnailUrl,
+        school: n.school,
+        submittedAt: n.submittedAt,
+      };
+    });
 
     return {
       statusCode: 200,
