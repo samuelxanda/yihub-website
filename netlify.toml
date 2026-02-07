@@ -3,12 +3,6 @@
   publish = "dist"
   functions = "netlify/functions"
 
-# Let Netlify Functions pass through without the SPA redirect
-[[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
 # SPA fallback — serve index.html for all client-side routes
 [[redirects]]
   from = "/*"
