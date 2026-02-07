@@ -11,7 +11,7 @@ import {
 import ShowcaseLayout from '../components/ShowcaseLayout';
 import { getEventWithProjects } from '../lib/api';
 import type { EventSummary } from '../lib/showcase-types';
-import { SCHOOL_OPTIONS } from '../lib/schools';
+
 
 const API = '/.netlify/functions';
 
@@ -241,30 +241,15 @@ const ParticipantRegistrationPage: React.FC = () => {
               <label className="block text-xs font-black uppercase tracking-widest text-white/60 mb-1.5">
                 School / Institution <span className="text-red-400">*</span>
               </label>
-              <select
+              <input
+                type="text"
                 required
-                value={SCHOOL_OPTIONS.includes(school as any) ? school : school === '' ? '' : '__other__'}
-                onChange={(e) => setSchool(e.target.value === '__other__' ? '' : e.target.value)}
+                minLength={2}
+                value={school}
+                onChange={(e) => setSchool(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-[#438CAF] transition-colors"
-                style={{ colorScheme: 'dark' }}
-              >
-                <option value="" disabled>Select your school…</option>
-                {SCHOOL_OPTIONS.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-                <option value="__other__">Other (type below)</option>
-              </select>
-              {!SCHOOL_OPTIONS.includes(school as any) && (
-                <input
-                  type="text"
-                  required
-                  minLength={2}
-                  value={school}
-                  onChange={(e) => setSchool(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-[#438CAF] transition-colors mt-2"
-                  placeholder="Enter your school / institution name"
-                />
-              )}
+                placeholder="e.g. University of Rwanda"
+              />
             </div>
 
             <hr className="border-white/10" />
