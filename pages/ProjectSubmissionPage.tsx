@@ -18,10 +18,12 @@ import type { EventSummary } from '../lib/showcase-types';
 const API = '/.netlify/functions';
 
 const CATEGORY_OPTIONS = [
-  'AI / ML',
-  'Web Development',
-  'Mobile App',
-  'IoT / Hardware',
+  'AI/ML',
+  'Web',
+  'Mobile',
+  'IoT',
+  'Hardware',
+  'Game',
   'Data Science',
   'Cybersecurity',
   'Education',
