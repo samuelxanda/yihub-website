@@ -128,7 +128,8 @@ const App: React.FC = () => {
         )}
       </AnimatePresence>
       {/* Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3 md:py-4 flex items-center justify-between bg-[#193441]/90 backdrop-blur-xl border-b border-white/5">
+      <header>
+      <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3 md:py-4 flex items-center justify-between bg-[#193441]/90 backdrop-blur-xl border-b border-white/5" aria-label="Main navigation">
         {/* Logo inside navbar */}
         <div 
           onClick={() => scrollTo('home')}
@@ -136,7 +137,7 @@ const App: React.FC = () => {
         >
           <img 
             src="/logo.png" 
-            alt="YIHUB Logo" 
+            alt="Youth Innovators Hub (YIHUB) — Rwanda youth tech community" 
             className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain select-none"
           />
         </div>
@@ -215,13 +216,15 @@ const App: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      </header>
 
+      <main>
       {/* Hero Section */}
       <Section id="home" className="min-h-screen flex flex-col justify-center relative p-0 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769309314/IMG_6025_t1itto.jpg" 
-            alt="Hackathon Background" 
+            alt="Youth Innovators Hub hackathon event in Rwanda — students building tech projects together" 
             className="w-full h-full object-cover opacity-50 "
           />
           <div className="absolute inset-0 bg-gradient-to-tr from-[#193441] via-[#193441]/40 to-transparent" />
@@ -243,7 +246,7 @@ const App: React.FC = () => {
           >
             
             <h1 className="text-4xl sm:text-5xl md:text-2xl lg:text-[5rem] font-black leading-[0.85] md:leading-[0.8] tracking-tighter mb-6 md:mb-8 md:mt-10 italic uppercase max-w-4xl">
-             SHAPING <span className="text-white drop-shadow-[3px_3px_0px_#438CAF] md:drop-shadow-[6px_6px_0px_#438CAF]">TOMORROW</span><br/>THROUGH<span className="text-[#438CAF] drop-shadow-[2px_2px_0px_#fff] md:drop-shadow-[4px_4px_0px_#fff]"><br />TECH &  INNOVATION.</span>
+             <span className="sr-only">Youth Innovators Hub — </span>SHAPING <span className="text-white drop-shadow-[3px_3px_0px_#438CAF] md:drop-shadow-[6px_6px_0px_#438CAF]">TOMORROW</span><br/>THROUGH<span className="text-[#438CAF] drop-shadow-[2px_2px_0px_#fff] md:drop-shadow-[4px_4px_0px_#fff]"><br />TECH &  INNOVATION.</span>
             </h1>
           </motion.div>
 
@@ -253,7 +256,7 @@ const App: React.FC = () => {
             transition={{ delay: 0.4, duration: 0.8 }}
 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8 md:mb-12 text-white/80 leading-snug"
           >
-            We're a community of young builders in Rwanda learning tech by actually building things —<span className="text-white border-b-2 md:border-b-4 border-[#438CAF]">together.</span>
+            We're a youth-led tech community in Rwanda — student builders who learn by shipping real projects,&nbsp;<span className="text-white border-b-2 md:border-b-4 border-[#438CAF]">together.</span>
           </motion.p>
 
           <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4 md:gap-6">
@@ -283,10 +286,10 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 items-center">
             <div className="lg:col-span-5">
               <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black tracking-tighter mb-6 md:mb-8 leading-none uppercase italic">
-                THIS IS NOT A <br/><span className="text-[#438CAF]">CLASS <br /> ROOM.</span>
+                THIS IS NOT A <br/><span className="text-[#438CAF]">CLASS ROOM.</span>
               </h2>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-[#193441]/70 leading-relaxed mb-6 md:mb-8">
-                <span className="text-[#438CAF] border-b-4 md:border-b-8 border-white">Youth Innovators Hub spirit.</span><br />We don't do boring traditional classes. We do high-energy sprints, messy code, and breakthrough moments.
+                <span className="text-[#438CAF] border-b-4 md:border-b-8 border-white">The Youth Innovators Hub way.</span><br />We don't do boring traditional classes. At YIHUB, we run high-energy sprints, messy code sessions, and breakthrough moments — built by student innovators, right here in Rwanda.
               </p>
               <div className="p-4 md:p-6 bg-[#438CAF]/10 rounded-xl md:rounded-2xl border-2 border-dashed border-[#438CAF]">
                 <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4 text-[#438CAF]">
@@ -328,7 +331,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
           {[
             { title: "Hackathons", desc: "Pure creation, caffeine, and zero sleep. Build fast, learn faster", icon: Flame, color: "bg-[#438CAF]/30 backdrop-blur-md" },
             { title: "Workshops", desc: "Practical skills for the modern builder. Hands-on, no boring slides", icon: Terminal, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "CodeLift", desc: "Inspiring students across Rwanda's secondary schools.", icon: Rocket, color: "bg-[#438CAF]/30 backdrop-blur-md" },
+            { title: "CodeLift", desc: "Our outreach program bringing hands-on coding and tech skills to secondary school students across Rwanda.", icon: Rocket, color: "bg-[#438CAF]/30 backdrop-blur-md" },
             { title: "Showcase", desc: "Flex your projects and get feedback from pros.", icon: Trophy, color: "bg-[#438CAF]/30 backdrop-blur-md" },
             { title: "Meetups", desc: "Hang out with people who get your nerdy jokes.", icon: Coffee, color: "bg-[#438CAF]/30 backdrop-blur-md" },
             { title: "Tech Talks", desc: "Real people, real stories.", icon: Podcast, color: "bg-[#438CAF]/30 backdrop-blur-md" }
@@ -371,7 +374,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
               FIND YOUR <br/><span className="text-[#438CAF] border-b-4 md:border-b-8 border-white">PEOPLE.</span>
             </h2>
             <p className="text-lg sm:text-xl md:text-2xl font-bold text-white/80 mb-8 md:mb-12 leading-snug">
-              <span className="text-white border-b-2 md:border-b-4 border-[#438CAF]">Stop learning in a vacuum.</span><br className="hidden sm:block" /><span className="sm:hidden"> </span>Connect with other high-schoolers across Rwanda who are as obsessed with building as you are.
+              <span className="text-white border-b-2 md:border-b-4 border-[#438CAF]">Stop learning in a vacuum.</span><br className="hidden sm:block" /><span className="sm:hidden"> </span>Join the Youth Innovators Hub and connect with student builders across Rwanda who are as obsessed with creating tech as you are.
             </p>
             
             <div className="grid grid-cols-2 gap-4 md:gap-8">
@@ -389,18 +392,18 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 relative">
                 <div className="space-y-3 sm:space-y-4 md:space-y-6 pt-6 md:pt-12">
                   <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-white shadow-xl md:shadow-2xl transform -rotate-2 md:-rotate-3 hover:rotate-0 transition-transform">
-                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769312817/_NIY3042_hikvkv.jpg" alt="Builders" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
+                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769312817/_NIY3042_hikvkv.jpg" alt="YIHUB community members collaborating at a tech event in Rwanda" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
                   </div>
                   <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-[#438CAF] shadow-xl md:shadow-2xl transform rotate-2 md:rotate-3 hover:rotate-0 transition-transform">
-                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313717/IMG_5954_ntc9ku.jpg" alt="Builders" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
+                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313717/IMG_5954_ntc9ku.jpg" alt="Students building projects at a Youth Innovators Hub workshop" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
                   </div>
                 </div>
                 <div className="space-y-3 sm:space-y-4 md:space-y-6 md:mt-10">
                   <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-[#438CAF] shadow-xl md:shadow-2xl transform rotate-1 md:rotate-2 hover:rotate-0 transition-transform">
-                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313728/_NIY3030_2_mdqxob.jpg" alt="Builders" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
+                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313728/_NIY3030_2_mdqxob.jpg" alt="Youth innovators presenting their tech projects in Kigali" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
                   </div>
                   <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-white shadow-xl md:shadow-2xl transform -rotate-1 md:-rotate-2 hover:rotate-0 transition-transform md:mt-20  ">
-                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313997/_NIY3037_urxedm.jpg" alt="Builders" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
+                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313997/_NIY3037_urxedm.jpg" alt="YIHUB hackathon participants coding together" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
                   </div>
                 </div>
              </div>
@@ -418,7 +421,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
         <div className="absolute inset-0 z-0">
           <img 
             src="/community.jfif" 
-            alt="Community" 
+            alt="Youth Innovators Hub community gathering" 
             className="w-full h-full object-cover opacity-10"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-white via-white/95 to-white" />
@@ -439,7 +442,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
           </h2>
           
           <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-10 md:mb-16 leading-snug px-2">
-            No applications. No fees. No excuses. <br className="hidden sm:block"/><span className="sm:hidden"> </span>Just you and the code.
+            No applications. No fees. No excuses. <br className="hidden sm:block"/><span className="sm:hidden"> </span>Just you, the code, and 120+ builders across Rwanda.
           </p>
           
           <div className="flex flex-col items-center justify-center gap-6 md:gap-8">
@@ -456,8 +459,10 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
         </motion.div>
       </Section>
 
+      </main>
+
       {/* Footer - Solid & Professional yet Bold */}
-      <footer className="py-12 md:py-16 lg:py-24 px-4 md:px-8 lg:px-16 bg-[#193441] border-t-4 md:border-t-8 border-[#438CAF]">
+      <footer className="py-12 md:py-16 lg:py-24 px-4 md:px-8 lg:px-16 bg-[#193441] border-t-4 md:border-t-8 border-[#438CAF]" role="contentinfo">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row justify-between gap-10 md:gap-12 lg:gap-16 mb-12 md:mb-16 lg:mb-20">
             <div className="max-w-md">
@@ -467,12 +472,12 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
         >
           <img 
             src="/logo.png" 
-            alt="YIHUB Logo" 
+            alt="Youth Innovators Hub" 
             className="h-12 sm:h-12 md:h-14 lg:h-16 w-auto object-contain select-none"
           />
         </div>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white/50 mb-6 md:mb-8 leading-tight italic">
-                Rwanda's premier builder community for students and innovators.
+                Youth Innovators Hub — Rwanda's youth tech community where student builders ship real projects.
               </p>
               <div className="flex gap-3 md:gap-4">
                 {/* Instagram */}
@@ -481,17 +486,17 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10"
-                  aria-label="Instagram"
+                  aria-label="Youth Innovators Hub on Instagram"
                 >
                   <Instagram size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </a>
-                {/* Twitter */}
+                {/* LinkedIn */}
                 <a
-                  href="https://twitter.com/yihub_rw"
+                  href="https://www.linkedin.com/company/youthinnovatorshub/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10"
-                  aria-label="Twitter"
+                  aria-label="Youth Innovators Hub on LinkedIn"
                 >
                   <Linkedin size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </a>
@@ -520,24 +525,27 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
             <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 lg:gap-16 text-[10px] sm:text-xs md:text-sm font-black uppercase tracking-wider md:tracking-widest">
               <div className="space-y-3 md:space-y-4 lg:space-y-6">
                 <span className="text-[#438CAF] block mb-2 md:mb-4 opacity-100">Hub</span>
-                <button onClick={() => scrollTo('about')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">About Hub</button>
-                <button onClick={() => scrollTo('build')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">What we do</button>
+                <button onClick={() => scrollTo('about')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">About</button>
+                <button onClick={() => scrollTo('build')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Programs</button>
                 <button onClick={() => scrollTo('community')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Community</button>
+                <button onClick={() => scrollTo('cta')} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Join</button>
               </div>
               <div className="space-y-3 md:space-y-4 lg:space-y-6 col-span-1 md:col-span-1">
-                <span className="text-[#438CAF] block mb-2 md:mb-4 opacity-100">Get in touch</span>
+                <span className="text-[#438CAF] block mb-2 md:mb-4 opacity-100">Connect</span>
                 <button
                   className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all"
                   onClick={() => setShowContactModal(true)}
                 >
                   Send a message
                 </button>
+                <a href="https://www.instagram.com/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Instagram</a>
+                <a href="https://www.linkedin.com/company/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">LinkedIn</a>
               </div>
             </div>
           </div>
           
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 md:pt-12 border-t border-white/5 text-[9px] sm:text-[10px] md:text-xs font-black uppercase tracking-widest md:tracking-[0.3em] opacity-30 italic">
-            <div className="md:mt-0">&copy; 2024 YOUTH INNOVATORS HUB.</div>
+            <div className="md:mt-0">&copy; 2024–2026 YOUTH INNOVATORS HUB (YIHUB). RWANDA.</div>
           </div>
         </div>
       </footer>

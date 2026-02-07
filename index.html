@@ -4,7 +4,132 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YIHUB | Youth Innovators Hub</title>
+
+    <!-- SEO title update: Brand name first, clear value prop, location -->
+    <title>Youth Innovators Hub (YIHUB) — Rwanda's Youth Tech & Builders Community</title>
+
+    <!-- Meta description update: Human, community-first, keyword-relevant, no stuffing -->
+    <meta name="description" content="Youth Innovators Hub (YIHUB) is a student-led tech community in Rwanda. We run hackathons, workshops, and build real projects together. Join the builders." />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://youthinnovatorshub.tech/" />
+
+    <!-- Open Graph / Social sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Youth Innovators Hub" />
+    <meta property="og:title" content="Youth Innovators Hub (YIHUB) — Rwanda's Youth Tech & Builders Community" />
+    <meta property="og:description" content="A student-led tech community in Rwanda. Hackathons, workshops, real projects. Built for builders, by builders." />
+    <meta property="og:url" content="https://youthinnovatorshub.tech/" />
+    <meta property="og:image" content="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769309314/IMG_6025_t1itto.jpg" />
+    <meta property="og:locale" content="en_RW" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Youth Innovators Hub (YIHUB) — Rwanda's Youth Tech & Builders Community" />
+    <meta name="twitter:description" content="A student-led tech community in Rwanda. Hackathons, workshops, real projects. Built for builders, by builders." />
+    <meta name="twitter:image" content="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769309314/IMG_6025_t1itto.jpg" />
+
+    <!-- Geo targeting (subtle) -->
+    <meta name="geo.region" content="RW" />
+    <meta name="geo.placename" content="Kigali, Rwanda" />
+
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Hreflang for regional targeting -->
+    <link rel="alternate" hreflang="en" href="https://youthinnovatorshub.tech/" />
+    <link rel="alternate" hreflang="x-default" href="https://youthinnovatorshub.tech/" />
+
+    <!-- Schema.org Organization + WebSite structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["Organization", "EducationalOrganization"],
+          "@id": "https://youthinnovatorshub.tech/#organization",
+          "name": "Youth Innovators Hub",
+          "alternateName": ["YIHUB", "Youth Innovators Hub Rwanda"],
+          "url": "https://youthinnovatorshub.tech/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://youthinnovatorshub.tech/logo.png",
+            "width": 512,
+            "height": 512
+          },
+          "description": "A youth-led tech and builders community in Rwanda. We run hackathons, workshops, and hands-on coding programs for student builders.",
+          "foundingDate": "2024",
+          "knowsAbout": ["software development", "hackathons", "web development", "coding workshops", "student tech community", "open source"],
+          "areaServed": {
+            "@type": "Country",
+            "name": "Rwanda",
+            "sameAs": "https://en.wikipedia.org/wiki/Rwanda"
+          },
+          "location": {
+            "@type": "Place",
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "RW",
+              "addressLocality": "Kigali"
+            }
+          },
+          "sameAs": [
+            "https://www.instagram.com/youthinnovatorshub/",
+            "https://www.linkedin.com/company/youthinnovatorshub/",
+            "https://github.com/Youth-Innovators-Hub/"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "general",
+            "url": "https://youthinnovatorshub.tech/"
+          },
+          "keywords": "youth tech community Rwanda, student hackathons Rwanda, coding community Rwanda, builders community Rwanda"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://youthinnovatorshub.tech/#website",
+          "url": "https://youthinnovatorshub.tech/",
+          "name": "Youth Innovators Hub",
+          "alternateName": "YIHUB",
+          "publisher": {
+            "@id": "https://youthinnovatorshub.tech/#organization"
+          },
+          "description": "Rwanda's youth-led tech and builders community. Hackathons, workshops, and real projects for student innovators."
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://youthinnovatorshub.tech/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://youthinnovatorshub.tech/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "About",
+              "item": "https://youthinnovatorshub.tech/#about"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Programs",
+              "item": "https://youthinnovatorshub.tech/#build"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "Community",
+              "item": "https://youthinnovatorshub.tech/#community"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="public/custom.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">

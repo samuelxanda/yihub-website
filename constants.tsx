@@ -45,7 +45,7 @@ export const ACTIVITIES: Activity[] = [
 ];
 
 export const UPCOMING_EVENTS: Event[] = [
-  { title: 'Kigali Builders Meetup', date: 'Next Saturday, 2PM', type: 'Community' },
-  { title: 'Project Demo Day', date: 'Aug 15th', type: 'Showcase' },
-  { title: 'Build-a-Thon 2024', date: 'Coming Soon', type: 'Hackathon' },
+  { title: 'Kigali Builders Meetup', date: 'Coming Soon', type: 'Community' },
+  { title: 'Project Demo Day', date: 'Coming Soon', type: 'Showcase' },
+  { title: 'Build-a-Thon 2026', date: 'Coming Soon', type: 'Hackathon' },
 ];
