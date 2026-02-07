@@ -19,9 +19,8 @@ const handler: Handler = async (event) => {
   try {
     // 1. Fetch project by slug (only if Approved)
     //
-    // IMPORTANT: The Airtable column names are shifted compared to
-    // the frontend property names. We request the real Airtable
-    // field names and remap below.
+    // IMPORTANT: Airtable columns after shortDescription are still
+    // shifted by one position. shortDescription is now its own column.
     const projectRecords = await fetchRecords(TABLE_PROJECTS, {
       filterByFormula: `AND({slug} = "${slug}", {status} = "Approved")`,
       maxRecords: 1,
@@ -29,14 +28,14 @@ const handler: Handler = async (event) => {
         'title',
         'slug',
         'category',
-        'fullDescription',   // actually holds shortDescription
-        'projectUrl',         // actually holds fullDescription
-        'githubUrl',          // actually holds projectUrl
-        'thumbnailUrl',       // actually holds githubUrl
-        'school',             // actually holds thumbnailUrl
-        'staffNotes',         // actually holds submittedAt
-        'teamLeadEmail',      // actually holds staffNotes (unused)
-        'teamMemberEmails',   // actually holds teamLeadEmail
+        'shortDescription',   // ✅ now correct
+        'fullDescription',     // actually holds old short desc (ignored)
+        'projectUrl',          // actually holds fullDescription
+        'githubUrl',           // actually holds projectUrl
+        'thumbnailUrl',        // actually holds githubUrl
+        'school',              // actually holds thumbnailUrl
+        'staffNotes',          // actually holds submittedAt
+        'teamMemberEmails',    // actually holds teamLeadEmail
         'event',
       ],
     });
@@ -75,7 +74,7 @@ const handler: Handler = async (event) => {
       title: f.title,
       slug: f.slug,
       category: f.category ?? [],
-      shortDescription: f.fullDescription ?? '',
+      shortDescription: f.shortDescription ?? '',
       fullDescription: f.projectUrl ?? null,
       projectUrl: f.githubUrl ?? null,
       githubUrl: f.thumbnailUrl ?? null,

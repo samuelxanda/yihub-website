@@ -26,10 +26,10 @@ const handler: Handler = async (event) => {
         'title',
         'slug',
         'category',
-        'fullDescription',   // → shortDescription
-        'githubUrl',          // → projectUrl
-        'school',             // → thumbnailUrl
-        'staffNotes',         // → submittedAt
+        'shortDescription',   // ✅ now correct
+        'githubUrl',           // → projectUrl
+        'school',              // → thumbnailUrl
+        'staffNotes',          // → submittedAt
       ],
     });
 
@@ -40,7 +40,7 @@ const handler: Handler = async (event) => {
       title: r.fields.title,
       slug: r.fields.slug,
       category: r.fields.category ?? [],
-      shortDescription: r.fields.fullDescription ?? '',
+      shortDescription: r.fields.shortDescription ?? '',
       projectUrl: r.fields.githubUrl ?? null,
       thumbnailUrl: r.fields.school ?? null,
       school: null,
