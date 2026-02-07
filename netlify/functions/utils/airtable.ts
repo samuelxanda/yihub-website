@@ -134,20 +134,24 @@ export function normaliseProject(f: Record<string, any>) {
 }
 
 /**
- * Standard cache headers for public GET responses (5 minutes).
+ * No-cache headers — ensures Airtable data changes appear instantly.
+ * Prevents caching at Netlify CDN edge, browser, and intermediate proxies.
  */
-export const CACHE_HEADERS = {
-  'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+const NO_CACHE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+  'Pragma': 'no-cache',
+  'Expires': '0',
+  'Surrogate-Control': 'no-store',
 };
 
 /**
- * Standard CORS + JSON response headers (cached GET).
+ * Standard CORS + JSON response headers (no cache — instant updates).
  */
 export function jsonHeaders() {
   return {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    ...CACHE_HEADERS,
+    ...NO_CACHE_HEADERS,
   };
 }
 

@@ -7,8 +7,15 @@ import type { EventSummary, ProjectSummary, ProjectDetail, SchoolSummary } from 
 
 const API = '/.netlify/functions';
 
+/**
+ * Fetch JSON from an Airtable-backed endpoint with cache-busting.
+ * - Appends a timestamp query param to bypass any intermediate cache
+ * - Uses cache: "no-store" to prevent browser caching
+ */
 async function fetchJSON<T>(url: string): Promise<T> {
-  const res = await fetch(url);
+  const separator = url.includes('?') ? '&' : '?';
+  const bustUrl = `${url}${separator}_t=${Date.now()}`;
+  const res = await fetch(bustUrl, { cache: 'no-store' });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
     throw new Error((body as any).error ?? `Request failed (${res.status})`);
