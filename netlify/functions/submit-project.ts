@@ -4,6 +4,7 @@ import {
   createRecord,
   TABLE_EVENTS,
   TABLE_PROJECTS,
+  TABLE_PARTICIPANTS,
   writeHeaders,
 } from './utils/airtable';
 
@@ -111,6 +112,27 @@ const handler: Handler = async (event) => {
       };
     }
 
+    // ── R6/H: Check if team lead is a registered participant ──
+    const leadEmail = teamLeadEmail.toLowerCase().trim();
+    let staffNotes = '';
+    try {
+      const participants = await fetchRecords(TABLE_PARTICIPANTS, {
+        filterByFormula: `AND({email} = "${leadEmail}")`,
+        maxRecords: 100,
+        fields: ['email', 'event'],
+      });
+      const isRegistered = participants.some((p) => {
+        const linked: string[] = (p.fields.event as string[]) ?? [];
+        return linked.includes(eventRec.id);
+      });
+      if (!isRegistered) {
+        staffNotes = 'Lead not registered as participant for this event';
+      }
+    } catch {
+      // Non-blocking: if participant check fails, allow submission anyway
+      staffNotes = 'Could not verify lead registration';
+    }
+
     // ── Build fields ────────────────────────────────────
     const slug = makeSlug(title);
     const memberEmailsStr = Array.isArray(teamMemberEmails)
@@ -124,9 +146,10 @@ const handler: Handler = async (event) => {
       category, // multi-select array
       school: school.trim(),
       status: 'Pending',
-      teamLeadEmail: teamLeadEmail.toLowerCase().trim(),
+      teamLeadEmail: leadEmail,
       submittedAt: new Date().toISOString().split('T')[0], // YYYY-MM-DD
       event: [eventRec.id], // linked record
+      ...(staffNotes ? { staffNotes } : {}),
     };
 
     if (fullDescription && typeof fullDescription === 'string' && fullDescription.trim().length > 0) {

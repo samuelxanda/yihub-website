@@ -124,7 +124,6 @@ const handler: Handler = async (event) => {
         participant: {
           id: created.id,
           name: created.fields.name,
-          email: created.fields.email,
           school: created.fields.school,
           event: eventRec.fields.name,
         },

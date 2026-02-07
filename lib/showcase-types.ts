@@ -31,8 +31,6 @@ export interface ProjectSummary {
 export interface ProjectDetail extends ProjectSummary {
   fullDescription: string | null;
   githubUrl: string | null;
-  teamLeadEmail: string | null;
-  teamMemberEmails: string | null;
   event: { id: string; name: string; slug: string } | null;
 }
 

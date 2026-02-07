@@ -52,12 +52,19 @@ const handler: Handler = async (event) => {
     }
 
     const n = normaliseProject(f);
+    // R12+R15: Never expose staffNotes or personal emails to public
     const project = {
       id: projectRecords[0].id,
       title: f.title,
       slug: f.slug,
       category: f.category ?? [],
-      ...n,
+      shortDescription: n.shortDescription,
+      fullDescription: n.fullDescription,
+      projectUrl: n.projectUrl,
+      githubUrl: n.githubUrl,
+      thumbnailUrl: n.thumbnailUrl,
+      school: n.school,
+      submittedAt: n.submittedAt,
       event: eventData,
     };
 
