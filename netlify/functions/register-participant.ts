@@ -102,7 +102,19 @@ const handler: Handler = async (event) => {
       fields.extraInfo = extraInfo.trim();
     }
 
-    const created = await createRecord(TABLE_PARTICIPANTS, fields);
+    // Try creating the record. If Airtable rejects an unknown field
+    // (e.g. extraInfo column doesn't exist yet), retry without it.
+    let created;
+    try {
+      created = await createRecord(TABLE_PARTICIPANTS, fields);
+    } catch (err: any) {
+      if (fields.extraInfo && err.message?.includes('UNKNOWN_FIELD_NAME')) {
+        delete fields.extraInfo;
+        created = await createRecord(TABLE_PARTICIPANTS, fields);
+      } else {
+        throw err;
+      }
+    }
 
     return {
       statusCode: 201,
