@@ -141,7 +141,7 @@ export const CACHE_HEADERS = {
 };
 
 /**
- * Standard CORS + JSON response headers.
+ * Standard CORS + JSON response headers (cached GET).
  */
 export function jsonHeaders() {
   return {
@@ -149,4 +149,40 @@ export function jsonHeaders() {
     'Access-Control-Allow-Origin': '*',
     ...CACHE_HEADERS,
   };
+}
+
+/**
+ * Response headers for POST/write endpoints (no cache).
+ */
+export function writeHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Cache-Control': 'no-store',
+  };
+}
+
+/**
+ * Create a single record in an Airtable table. Returns the created record.
+ */
+export async function createRecord(
+  table: string,
+  fields: Record<string, any>
+): Promise<AirtableRecord> {
+  const url = `${API_BASE}/${encodeURIComponent(table)}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ fields }),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Airtable create error ${res.status}: ${errorText}`);
+  }
+
+  return res.json();
 }

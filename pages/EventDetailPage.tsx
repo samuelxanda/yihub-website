@@ -11,6 +11,8 @@ import {
   ExternalLink,
   Sparkles,
   FolderOpen,
+  UserPlus,
+  Upload,
 } from 'lucide-react';
 import ShowcaseLayout from '../components/ShowcaseLayout';
 import { getEventWithProjects } from '../lib/api';
@@ -135,6 +137,24 @@ const EventDetailPage: React.FC = () => {
             {event.description && (
               <p className="text-base md:text-lg text-white/60 max-w-3xl leading-relaxed">{event.description}</p>
             )}
+
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-3 mt-6">
+              <Link
+                to={`/events/${eventSlug}/register`}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#438CAF] text-white text-xs font-black uppercase tracking-widest hover:bg-[#438CAF]/80 transition-colors"
+              >
+                <UserPlus className="w-4 h-4" /> Register
+              </Link>
+              {event.submissionOpen && (
+                <Link
+                  to={`/events/${eventSlug}/submit`}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/10 text-white text-xs font-black uppercase tracking-widest hover:border-[#438CAF] transition-colors"
+                >
+                  <Upload className="w-4 h-4" /> Submit Project
+                </Link>
+              )}
+            </div>
           </motion.div>
         </div>
       </section>

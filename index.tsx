@@ -6,6 +6,8 @@ import App from './App';
 import ActivityPage from './pages/ActivityPage';
 import EventsPage from './pages/EventsPage';
 import EventDetailPage from './pages/EventDetailPage';
+import ParticipantRegistrationPage from './pages/ParticipantRegistrationPage';
+import ProjectSubmissionPage from './pages/ProjectSubmissionPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import SchoolsPage from './pages/SchoolsPage';
 import SchoolDetailPage from './pages/SchoolDetailPage';
@@ -24,6 +26,8 @@ root.render(
         {/* Showcase feature routes — must sit above the catch-all */}
         <Route path="/events" element={<EventsPage />} />
         <Route path="/events/:eventSlug" element={<EventDetailPage />} />
+        <Route path="/events/:eventSlug/register" element={<ParticipantRegistrationPage />} />
+        <Route path="/events/:eventSlug/submit" element={<ProjectSubmissionPage />} />
         <Route path="/projects/:projectSlug" element={<ProjectDetailPage />} />
         <Route path="/schools" element={<SchoolsPage />} />
         <Route path="/schools/:schoolSlug" element={<SchoolDetailPage />} />
