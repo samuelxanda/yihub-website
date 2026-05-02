@@ -589,6 +589,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
           
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 md:pt-12 border-t border-white/5 text-[9px] sm:text-[10px] md:text-xs font-black uppercase tracking-widest md:tracking-[0.3em] opacity-30 italic">
             <div className="md:mt-0">&copy;2026 YOUTH INNOVATORS HUB (YIHUB).</div>
+            <div> Built with ❤️ in Kigali, Rwanda 🇷🇼 </div>
           </div>
         </div>
       </footer>
