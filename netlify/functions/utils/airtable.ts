@@ -9,6 +9,10 @@ const AIRTABLE_TOKEN = process.env.AIRTABLE_API_KEY ?? process.env.AIRTABLE_TOKE
 const AIRTABLE_BASE_ID = (process.env.AIRTABLE_BASE_ID ?? '').split('/')[0];
 const API_BASE = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}`;
 
+export function escapeFormulaValue(value: string) {
+  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
 // Table names (configurable via env, with sensible defaults)
 export const TABLE_EVENTS = process.env.AIRTABLE_TABLE_EVENTS ?? 'Events';
 export const TABLE_PARTICIPANTS = process.env.AIRTABLE_TABLE_PARTICIPANTS ?? 'Participants';
