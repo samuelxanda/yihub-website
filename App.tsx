@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { 
   Rocket, 
   Code, 
@@ -40,6 +40,8 @@ const App: React.FC = () => {
   const [contactName, setContactName] = useState('');
   const [contactMessage, setContactMessage] = useState('');
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
   const location = useLocation();
 
   // Handle hash-based scrolling (e.g. when navigating from /#about on activity pages)
@@ -61,8 +63,51 @@ const App: React.FC = () => {
   }, [location]);
 
   useEffect(() => {
+    if (isMenuOpen || showContactModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen, showContactModal]);
+
+  useEffect(() => {
+    if (!showContactModal) return;
+    const modal = modalRef.current;
+    const focusable = modal?.querySelectorAll<HTMLElement>(
+      'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable?.[0];
+    const last = focusable?.[focusable.length - 1];
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowContactModal(false);
+      }
+      if (e.key === 'Tab' && focusable && focusable.length) {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    first?.focus();
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showContactModal]);
+
+  useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'build', 'events', 'community'];
+      const sections = ['home', 'about', 'build', 'community'];
       const scrollPos = window.scrollY + 100;
 
       for (const section of sections) {
@@ -85,6 +130,7 @@ const App: React.FC = () => {
         top: element.offsetTop - 80,
         behavior: 'smooth'
       });
+      window.history.pushState(null, '', `#${id}`);
       setIsMenuOpen(false);
     }
   };
@@ -100,7 +146,13 @@ const App: React.FC = () => {
             exit={{ opacity: 0, scale: 0.95 }}
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm"
           >
-            <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full relative">
+            <div
+              ref={modalRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Send a message"
+              className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full relative"
+            >
               {/* Close Button */}
               <button
                 onClick={() => setShowContactModal(false)}
@@ -165,7 +217,7 @@ const App: React.FC = () => {
         </a>
 
         <div className="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest">
-          {['about', 'build','community'].map((id) => (
+          {['about', 'build'].map((id) => (
             <a 
               key={id}
               href={`#${id}`}
@@ -183,6 +235,14 @@ const App: React.FC = () => {
             Events
             <span className="absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform" />
           </Link>
+          <a 
+            href="#community"
+            onClick={(e) => { e.preventDefault(); scrollTo('community'); }} 
+            className={`group relative py-2 transition-all ${activeNav === 'community' ? 'text-[#438CAF]' : 'text-white hover:text-[#438CAF]'}`}
+          >
+            Community
+            <span className={`absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform ${activeNav === 'community' ? 'scale-x-100' : ''}`} />
+          </a>
         </div>
         
         <div className="flex items-center gap-4">
@@ -198,6 +258,8 @@ const App: React.FC = () => {
           <button 
             className="lg:hidden p-2 text-white bg-white/10 rounded-full"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? <Zap className="text-[#438CAF]" /> : <Terminal />}
           </button>
@@ -223,7 +285,7 @@ const App: React.FC = () => {
             </button>
             
             <div className="flex flex-col space-y-6 sm:space-y-8 mt-8">
-              {['about', 'build','community'].map((id) => (
+              {['about', 'build'].map((id) => (
                 <a 
                   key={id}
                   href={`#${id}`}
@@ -240,6 +302,13 @@ const App: React.FC = () => {
               >
                 Events
               </Link>
+              <a 
+                href="#community"
+                onClick={(e) => { e.preventDefault(); scrollTo('community'); }}
+                className="text-3xl sm:text-4xl md:text-5xl font-black uppercase text-left tracking-tighter hover:text-[#438CAF] transition-colors"
+              >
+                Community
+              </a>
             </div>
             
             {/* Mobile CTA */}
@@ -283,7 +352,7 @@ const App: React.FC = () => {
             transition={{ duration: 0.8 }}
           >
             
-            <h1 className="text-4xl sm:text-5xl md:text-2xl lg:text-[5rem] font-black leading-[0.85] md:leading-[0.8] tracking-tighter mb-6 md:mb-8 md:mt-10 italic uppercase max-w-4xl">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-[0.85] md:leading-[0.8] tracking-tighter mb-6 md:mb-8 md:mt-10 italic uppercase max-w-4xl">
              <span className="sr-only">Youth Innovators Hub — </span>SHAPING <span className="text-white drop-shadow-[3px_3px_0px_#438CAF] md:drop-shadow-[6px_6px_0px_#438CAF]">TOMORROW</span><br/>THROUGH<span className="text-[#438CAF] drop-shadow-[2px_2px_0px_#fff] md:drop-shadow-[4px_4px_0px_#fff]"><br />TECH &  INNOVATION.</span>
             </h1>
           </motion.div>
@@ -292,7 +361,7 @@ const App: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8 md:mb-12 text-white/80 leading-snug"
+className="text-base sm:text-lg md:text-xl font-bold max-w-2xl mb-8 md:mb-12 text-white/80 leading-snug"
           >
             We're a youth-led tech community in Rwanda — student builders who learn by shipping real projects,&nbsp;<span className="text-white border-b-2 md:border-b-4 border-[#438CAF]">together.</span>
           </motion.p>
@@ -302,7 +371,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
               href="https://chat.whatsapp.com/DgU4FYHIqltLjGThwEIFZp"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 sm:px-8 md:px-10 py-4 md:py-5 bg-[#438CAF] text-white font-black text-base sm:text-lg md:text-xl uppercase tracking-tighter rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 md:gap-3 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] md:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)]"
+              className="px-6 sm:px-8 md:px-10 py-4 md:py-5 bg-[#438CAF] text-white font-black text-base sm:text-lg md:text-xl uppercase tracking-tighter rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 md:gap-4 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] md:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)]"
             >
               Start Building
               <Zap fill="currentColor" size={20} className="md:w-6 md:h-6" />
@@ -310,28 +379,27 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
             <a 
               href="#build"
               onClick={(e) => { e.preventDefault(); scrollTo('build'); }}
-              className="px-6 sm:px-8 md:px-10 py-4 md:py-5 bg-white/10 text-white font-black text-base sm:text-lg md:text-xl uppercase tracking-tighter rounded-xl border-2 border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2 md:gap-3"
+              className="text-white/80 font-black text-base sm:text-lg md:text-xl uppercase tracking-tighter hover:text-[#438CAF] transition-colors"
             >
               See our programs
-              <Gamepad size={20} className="md:w-6 md:h-6" />
             </a>
           </div>
         </div>
       </Section>
 
       {/* The Manifesto - Card Style */}
-      <Section id="about" className="bg-white text-[#193441] !py-16 md:!py-32" dark={false}>
+      <Section id="about" className="bg-white text-[#193441]" dark={false}>
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 items-center">
             <div className="lg:col-span-5">
-              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black tracking-tighter mb-6 md:mb-8 leading-none uppercase italic">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-6 md:mb-8 leading-none uppercase italic">
                 THIS IS NOT A <br/><span className="text-[#438CAF]">CLASS ROOM.</span>
               </h2>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-[#193441]/70 leading-relaxed mb-6 md:mb-8">
+              <p className="text-base sm:text-lg md:text-xl font-bold text-[#193441]/70 leading-relaxed mb-6 md:mb-8">
                 <span className="text-[#438CAF] border-b-4 md:border-b-8 border-white">The Youth Innovators Hub way.</span><br />We don't do boring traditional classes. At YIHUB, we run high-energy sprints, messy code sessions, and breakthrough moments — built by student innovators, right here in Rwanda.
               </p>
               <div className="p-4 md:p-6 bg-[#438CAF]/10 rounded-xl md:rounded-2xl border-2 border-dashed border-[#438CAF]">
-                <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4 text-[#438CAF]">
+                <div className="flex items-center gap-2 md:gap-4 mb-3 md:mb-4 text-[#438CAF]">
                   <MessageSquare size={20} className="md:w-6 md:h-6" />
                   <span className="font-black uppercase tracking-wider md:tracking-widest text-xs md:text-sm">Founder's Note</span>
                 </div>
@@ -341,14 +409,14 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
               </div>
             </div>
             
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 p-4 md:p-6 rounded-2xl md:rounded-[2rem] shadow-lg">
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-4 p-4 md:p-6 rounded-2xl md:rounded-[2rem] shadow-lg">
               {[
                 { t: "Build First", d: "Ship projects while others are still reading documentation.", i: Hammer },
                 { t: "Ask Loudly", d: "No stupid questions. Just missing context.", i: MessageSquare },
                 { t: "Fail Fast", d: "Breaking things is just learning in disguise.", i: Zap },
                 { t: "Grow Together", d: "Build your network by building cool stuff.", i: Users }
               ].map((item, idx) => (
-                <div key={idx} className="p-5 md:p-8 bg-[#193441] text-white rounded-2xl md:rounded-[2rem] shadow-xl hover:-translate-y-2 transition-transform border-2 md:border-4 border-[#438CAF]/20">
+                <div key={idx} className="p-6 md:p-8 bg-[#193441] text-white rounded-2xl md:rounded-[2rem] shadow-xl hover:-translate-y-2 transition-transform border-2 md:border-4 border-[#438CAF]/20">
                   <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6 ">
                     <item.i size={24} className="md:w-8 md:h-8" />
                   </div>
@@ -401,7 +469,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
       </Section>
 
       {/* Community / Proof Section Combined */}
-      <Section id="community" className="bg-[#193441] !py-20 md:!py-40 relative">
+      <Section id="community" className="bg-[#193441] relative">
         <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-[#193441] to-transparent z-10" />
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-24 items-center max-w-7xl mx-auto px-4 md:px-6">
           {/* Text Content - Shows first on mobile */}
@@ -410,16 +478,16 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
               <Heart size={16} fill="white" />
               <span>We Love Builders</span>
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black tracking-tighter mb-6 md:mb-8 leading-none uppercase italic">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-6 md:mb-8 leading-none uppercase italic">
               FIND YOUR <br/><span className="text-[#438CAF] border-b-4 md:border-b-8 border-white">PEOPLE.</span>
             </h2>
-            <p className="text-lg sm:text-xl md:text-2xl font-bold text-white/80 mb-8 md:mb-12 leading-snug">
+            <p className="text-base sm:text-lg md:text-xl font-bold text-white/80 mb-8 md:mb-12 leading-snug">
               <span className="text-white border-b-2 md:border-b-4 border-[#438CAF]">Stop learning in a vacuum.</span><br className="hidden sm:block" /><span className="sm:hidden"> </span>Join the Youth Innovators Hub and connect with student builders across Rwanda who are as obsessed with creating tech as you are.
             </p>
             
             <div className="grid grid-cols-2 gap-4 md:gap-8">
               {ACHIEVEMENTS.slice(0, 2).map((stat, i) => (
-                <div key={i} className="bg-white/5 p-2 md:p-6 rounded-2xl md:rounded-3xl border-2 border-white/10">
+                <div key={i} className="bg-white/5 p-4 md:p-6 rounded-2xl md:rounded-3xl border-2 border-white/10">
                   <div className="text-2xl sm:text-3xl md:text-4xl font-black mb-1">{stat.value}</div>
                   <div className="text-[10px] sm:text-xs font-black uppercase text-[#438CAF] tracking-wider md:tracking-widest">{stat.label}</div>
                 </div>
@@ -429,8 +497,8 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
 
           {/* Images Grid - Shows second on mobile */}
           <div className="relative order-2 lg:order-1 w-full">
-             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 relative">
-                <div className="space-y-3 sm:space-y-4 md:space-y-6 pt-6 md:pt-12">
+             <div className="grid grid-cols-2 gap-4 sm:gap-4 md:gap-6 relative">
+                <div className="space-y-4 sm:space-y-4 md:space-y-6 pt-6 md:pt-12">
                   <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-white shadow-xl md:shadow-2xl transform -rotate-2 md:-rotate-3 hover:rotate-0 transition-transform">
                     <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769312817/_NIY3042_hikvkv.jpg" alt="YIHUB community members collaborating at a tech event in Rwanda" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
                   </div>
@@ -438,7 +506,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
                     <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313717/IMG_5954_ntc9ku.jpg" alt="Students building projects at a Youth Innovators Hub workshop" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
                   </div>
                 </div>
-                <div className="space-y-3 sm:space-y-4 md:space-y-6 md:mt-10">
+                <div className="space-y-4 sm:space-y-4 md:space-y-6 md:mt-10">
                   <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-[#438CAF] shadow-xl md:shadow-2xl transform rotate-1 md:rotate-2 hover:rotate-0 transition-transform">
                     <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313728/_NIY3030_2_mdqxob.jpg" alt="Youth innovators presenting their tech projects in Kigali" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
                   </div>
@@ -448,7 +516,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
                 </div>
              </div>
              {/* Floating Achievement Badge */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-[#193441] p-4 sm:p-6 md:p-6 rounded-xl sm:rounded-2xl md:rounded-[2rem] shadow-[8px_8px_0px_0px_#438CAF] md:shadow-[9px_10px_0px_0px_#438CAF] z-10 flex items-center gap-3 sm:gap-4 md:gap-6">
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-[#193441] p-4 sm:p-6 md:p-6 rounded-xl sm:rounded-2xl md:rounded-[2rem] shadow-[8px_8px_0px_0px_#438CAF] md:shadow-[9px_10px_0px_0px_#438CAF] z-10 flex items-center gap-4 sm:gap-4 md:gap-6">
                 <div className="text-2xl sm:text-3xl md:text-5xl font-black">120+</div>
                 <div className="text-[8px] sm:text-[10px] md:text-xs font-black uppercase tracking-wider md:tracking-widest leading-none">Builders<br/>Strong.</div>
              </div>
@@ -456,7 +524,7 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
         </div>
       </Section>
       {/* Final Call - The Energy Core */}
-      <Section id="cta" className="text-center py-20 md:py-40  text-[#193441] relative overflow-hidden">
+      <Section id="cta" className="text-center text-[#193441] relative overflow-hidden">
         {/* Community Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -472,16 +540,16 @@ className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold max-w-2xl mb-8
           whileInView={{ scale: 1, opacity: 1 }}
           className="relative z-10 max-w-4xl mx-auto px-4 md:px-6"
         >
-          <div className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 bg-[#438CAF] text-white rounded-xl md:rounded-2xl font-black uppercase tracking-wider md:tracking-widest text-xs md:text-sm mb-8 md:mb-12 shadow-2xl animate-bounce">
+          <div className="inline-flex items-center gap-2 md:gap-4 px-4 md:px-6 py-2 md:py-3 bg-[#438CAF] text-white rounded-xl md:rounded-2xl font-black uppercase tracking-wider md:tracking-widest text-xs md:text-sm mb-8 md:mb-12 shadow-2xl animate-bounce">
             <Rocket size={20} className="md:w-6 md:h-6" />
             <span>Ready to ship?</span>
           </div>
           
-          <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-[9rem] font-black tracking-tighter mb-6 md:mb-12 uppercase italic leading-[0.85]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-6 md:mb-12 uppercase italic leading-[0.85]">
             START YOUR <br/><span className="text-[#438CAF] drop-shadow-[2px_2px_0px_#193441] md:drop-shadow-[4px_4px_0px_#193441]">JOURNEY.</span>
           </h2>
           
-          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-10 md:mb-16 leading-snug px-2">
+          <p className="text-base sm:text-lg md:text-xl font-bold mb-10 md:mb-16 leading-snug px-2">
             No applications. No fees. No excuses. <br className="hidden sm:block"/><span className="sm:hidden"> </span>Just you, the code, and 120+ builders across Rwanda.
           </p>
           

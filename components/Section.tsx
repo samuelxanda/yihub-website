@@ -16,7 +16,7 @@ const Section: React.FC<SectionProps> = ({ id, children, className = "", title, 
       className={`relative py-24 px-6 md:px-12 lg:px-24 overflow-hidden ${dark ? 'bg-[#193441]' : ''} ${className}`}
     >
       {title && (
-        <h2 className="text-4xl md:text-6xl font-black mb-16 tracking-tighter text-white">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-16 tracking-tighter text-white">
           {title}
         </h2>
       )}
