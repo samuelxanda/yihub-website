@@ -135,6 +135,13 @@ const ActivityPage: React.FC = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
   const activity = slug ? ACTIVITIES[slug] : undefined;
 
   useEffect(() => {
@@ -215,6 +222,8 @@ const ActivityPage: React.FC = () => {
             <button
               className="lg:hidden p-2 text-white bg-white/10 rounded-full"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? <Zap className="text-[#438CAF]" /> : <Terminal />}
             </button>
