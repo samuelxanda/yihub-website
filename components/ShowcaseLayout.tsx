@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -16,6 +16,13 @@ import {
  */
 const ShowcaseLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
 
   return (
     <div className="min-h-screen bg-[#193441] selection:bg-[#438CAF] selection:text-white text-white">
@@ -67,6 +74,8 @@ const ShowcaseLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =
             <button
               className="lg:hidden p-2 text-white bg-white/10 rounded-full"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? <Zap className="text-[#438CAF]" /> : <Terminal />}
             </button>
