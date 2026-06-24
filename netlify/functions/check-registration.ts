@@ -4,6 +4,7 @@ import {
   TABLE_EVENTS,
   TABLE_PARTICIPANTS,
   jsonHeaders,
+  escapeFormulaValue,
 } from './utils/airtable';
 
 /**
@@ -25,7 +26,7 @@ const handler: Handler = async (event) => {
   try {
     // 1. Look up event
     const eventRecords = await fetchRecords(TABLE_EVENTS, {
-      filterByFormula: `{slug} = "${eventSlug}"`,
+      filterByFormula: `{slug} = "${escapeFormulaValue(eventSlug)}"`,
       maxRecords: 1,
       fields: ['slug'],
     });
@@ -42,7 +43,7 @@ const handler: Handler = async (event) => {
 
     // 2. Check if a participant with this email is linked to this event
     const participants = await fetchRecords(TABLE_PARTICIPANTS, {
-      filterByFormula: `{email} = "${email}"`,
+      filterByFormula: `{email} = "${escapeFormulaValue(email)}"`,
       maxRecords: 100,
       fields: ['email', 'event'],
     });

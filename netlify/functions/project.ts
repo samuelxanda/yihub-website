@@ -1,5 +1,5 @@
 import type { Handler } from '@netlify/functions';
-import { fetchRecords, TABLE_PROJECTS, TABLE_EVENTS, jsonHeaders, PROJECT_FIELDS, normaliseProject } from './utils/airtable';
+import { fetchRecords, TABLE_PROJECTS, TABLE_EVENTS, jsonHeaders, PROJECT_FIELDS, normaliseProject, escapeFormulaValue } from './utils/airtable';
 
 /**
  * GET /.netlify/functions/project?slug=my-project-slug
@@ -18,7 +18,7 @@ const handler: Handler = async (event) => {
 
   try {
     const projectRecords = await fetchRecords(TABLE_PROJECTS, {
-      filterByFormula: `AND({slug} = "${slug}", {status} = "Approved")`,
+      filterByFormula: `AND({slug} = "${escapeFormulaValue(slug)}", {status} = "Approved")`,
       maxRecords: 1,
       fields: PROJECT_FIELDS,
     });

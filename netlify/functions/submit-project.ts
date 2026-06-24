@@ -6,6 +6,7 @@ import {
   TABLE_PROJECTS,
   TABLE_PARTICIPANTS,
   writeHeaders,
+  escapeFormulaValue,
 } from './utils/airtable';
 
 function isValidEmail(email: string): boolean {
@@ -85,7 +86,7 @@ const handler: Handler = async (event) => {
 
     // ── Look up event by slug ───────────────────────────
     const eventRecords = await fetchRecords(TABLE_EVENTS, {
-      filterByFormula: `{slug} = "${eventSlug}"`,
+      filterByFormula: `{slug} = "${escapeFormulaValue(eventSlug)}"`,
       maxRecords: 1,
       fields: ['name', 'slug', 'submissionOpen'],
     });
@@ -117,7 +118,7 @@ const handler: Handler = async (event) => {
     let staffNotes = '';
     try {
       const participants = await fetchRecords(TABLE_PARTICIPANTS, {
-        filterByFormula: `AND({email} = "${leadEmail}")`,
+        filterByFormula: `AND({email} = "${escapeFormulaValue(leadEmail)}")`,
         maxRecords: 100,
         fields: ['email', 'event'],
       });

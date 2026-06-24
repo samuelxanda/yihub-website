@@ -5,6 +5,7 @@ import {
   TABLE_EVENTS,
   TABLE_PARTICIPANTS,
   writeHeaders,
+  escapeFormulaValue,
 } from './utils/airtable';
 
 // Simple in-memory rate-limit: 5 submissions per email per 10 minutes
@@ -75,7 +76,7 @@ const handler: Handler = async (event) => {
 
     // ── Look up event by slug ───────────────────────────
     const eventRecords = await fetchRecords(TABLE_EVENTS, {
-      filterByFormula: `{slug} = "${eventSlug}"`,
+      filterByFormula: `{slug} = "${escapeFormulaValue(eventSlug)}"`,
       maxRecords: 1,
       fields: ['name', 'slug', 'status'],
     });
