@@ -44,6 +44,14 @@ const handler: Handler = async (event) => {
       })
       .filter((p) => toSlug(p.school ?? '') === schoolSlug);
 
+    if (projects.length === 0) {
+      return {
+        statusCode: 404,
+        headers: jsonHeaders(),
+        body: JSON.stringify({ error: 'School not found' }),
+      };
+    }
+
     const schoolName = projects[0]?.school ?? schoolSlug;
 
     return {
