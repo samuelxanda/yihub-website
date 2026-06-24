@@ -58,6 +58,7 @@ const ProjectSubmissionPage: React.FC = () => {
   const [teamLeadEmail, setTeamLeadEmail] = useState('');
   const [memberEmailInput, setMemberEmailInput] = useState('');
   const [teamMemberEmails, setTeamMemberEmails] = useState<string[]>([]);
+  const [memberEmailError, setMemberEmailError] = useState<string | null>(null);
 
   // Form state
   const [submitting, setSubmitting] = useState(false);
@@ -92,6 +93,14 @@ const ProjectSubmissionPage: React.FC = () => {
   };
 
   useEffect(() => {
+    setVerified(false);
+    setVerifyEmail('');
+    setVerifyError(null);
+    setTeamLeadEmail('');
+    setSubmissionClosed(false);
+  }, [eventSlug]);
+
+  useEffect(() => {
     if (!eventSlug) return;
     getEventWithProjects(eventSlug)
       .then(({ event: e }) => {
@@ -106,10 +115,21 @@ const ProjectSubmissionPage: React.FC = () => {
   // ── Team member email chip management ─────────────────
   const addMemberEmail = () => {
     const trimmed = memberEmailInput.trim().toLowerCase();
-    if (trimmed && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed) && !teamMemberEmails.includes(trimmed)) {
-      setTeamMemberEmails([...teamMemberEmails, trimmed]);
-      setMemberEmailInput('');
+    if (!trimmed) {
+      setMemberEmailError('Enter an email to add.');
+      return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setMemberEmailError('Enter a valid email address.');
+      return;
+    }
+    if (teamMemberEmails.includes(trimmed)) {
+      setMemberEmailError('That email is already added.');
+      return;
+    }
+    setTeamMemberEmails([...teamMemberEmails, trimmed]);
+    setMemberEmailInput('');
+    setMemberEmailError(null);
   };
 
   const removeMemberEmail = (email: string) => {
@@ -448,7 +468,10 @@ const ProjectSubmissionPage: React.FC = () => {
                 <input
                   type="email"
                   value={memberEmailInput}
-                  onChange={(e) => setMemberEmailInput(e.target.value)}
+                  onChange={(e) => {
+                    setMemberEmailInput(e.target.value);
+                    setMemberEmailError(null);
+                  }}
                   onKeyDown={handleMemberKeyDown}
                   className={`flex-1 ${inputClass}`}
                   placeholder="member@school.edu — press Enter to add"
@@ -475,6 +498,9 @@ const ProjectSubmissionPage: React.FC = () => {
                     </span>
                   ))}
                 </div>
+              )}
+              {memberEmailError && (
+                <p className="text-[10px] text-red-400 mt-2">{memberEmailError}</p>
               )}
             </div>
 
