@@ -22,18 +22,21 @@ const handler: Handler = async () => {
       ],
     });
 
-    const events = records.map((r) => ({
-      id: r.id,
-      name: r.fields.name,
-      slug: r.fields.slug,
-      startDate: r.fields.startDate,
-      endDate: r.fields.endDate ?? null,
-      location: r.fields.location ?? null,
-      status: r.fields.status ?? 'Upcoming',
-      submissionOpen: r.fields.submissionOpen ?? false,
-      description: r.fields.description ?? null,
-      coverImageUrl: r.fields.coverImageUrl ?? null,
-    }));
+    // Omit Hidden events — set status to "Hidden" in Airtable to take an event offline
+    const events = records
+      .filter((r) => (r.fields.status ?? 'Upcoming') !== 'Hidden')
+      .map((r) => ({
+        id: r.id,
+        name: r.fields.name,
+        slug: r.fields.slug,
+        startDate: r.fields.startDate,
+        endDate: r.fields.endDate ?? null,
+        location: r.fields.location ?? null,
+        status: r.fields.status ?? 'Upcoming',
+        submissionOpen: r.fields.submissionOpen ?? false,
+        description: r.fields.description ?? null,
+        coverImageUrl: r.fields.coverImageUrl ?? null,
+      }));
 
     return {
       statusCode: 200,

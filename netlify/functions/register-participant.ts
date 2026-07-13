@@ -81,7 +81,7 @@ const handler: Handler = async (event) => {
       fields: ['name', 'slug', 'status'],
     });
 
-    if (eventRecords.length === 0) {
+    if (eventRecords.length === 0 || (eventRecords[0].fields.status ?? '') === 'Hidden') {
       return {
         statusCode: 404,
         headers: writeHeaders(),

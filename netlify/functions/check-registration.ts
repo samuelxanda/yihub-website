@@ -28,10 +28,10 @@ const handler: Handler = async (event) => {
     const eventRecords = await fetchRecords(TABLE_EVENTS, {
       filterByFormula: `{slug} = "${escapeFormulaValue(eventSlug)}"`,
       maxRecords: 1,
-      fields: ['slug'],
+      fields: ['slug', 'status'],
     });
 
-    if (eventRecords.length === 0) {
+    if (eventRecords.length === 0 || (eventRecords[0].fields.status ?? '') === 'Hidden') {
       return {
         statusCode: 404,
         headers: jsonHeaders(),
@@ -39,7 +39,7 @@ const handler: Handler = async (event) => {
       };
     }
 
-    const eventId = eventRecords[0].id;
+    const eventId = eventRecords[0].id
 
     // 2. Check if a participant with this email is linked to this event
     const participants = await fetchRecords(TABLE_PARTICIPANTS, {

@@ -43,6 +43,15 @@ const handler: Handler = async (event) => {
     }
 
     const eventRec = eventRecords[0];
+
+    if ((eventRec.fields.status ?? '') === 'Hidden') {
+      return {
+        statusCode: 404,
+        headers: jsonHeaders(),
+        body: JSON.stringify({ error: 'Event not found' }),
+      };
+    }
+
     const eventData = {
       id: eventRec.id,
       name: eventRec.fields.name,

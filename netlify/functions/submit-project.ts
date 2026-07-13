@@ -88,10 +88,10 @@ const handler: Handler = async (event) => {
     const eventRecords = await fetchRecords(TABLE_EVENTS, {
       filterByFormula: `{slug} = "${escapeFormulaValue(eventSlug)}"`,
       maxRecords: 1,
-      fields: ['name', 'slug', 'submissionOpen'],
+      fields: ['name', 'slug', 'status', 'submissionOpen'],
     });
 
-    if (eventRecords.length === 0) {
+    if (eventRecords.length === 0 || (eventRecords[0].fields.status ?? '') === 'Hidden') {
       return {
         statusCode: 404,
         headers: writeHeaders(),
