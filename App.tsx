@@ -80,7 +80,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'moments', 'about', 'build', 'community'];
+      const sections = ['home', 'founder-story', 'moments', 'about', 'build', 'community'];
       const scrollPos = window.scrollY + 100;
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -373,6 +373,55 @@ const App: React.FC = () => {
                 </a>
               </div>
             </motion.div>
+          </div>
+        </Section>
+
+        {/* Founder story */}
+        <Section id="founder-story" className="bg-navy py-20 md:py-28">
+          <div className="max-w-6xl mx-auto px-5 md:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+              <div className="lg:col-span-7">
+                <p className="text-accent text-xs font-semibold uppercase tracking-widest mb-3">
+                  {FOUNDER_STORY.label}
+                </p>
+                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-4 leading-snug">
+                  {FOUNDER_STORY.title}
+                </h2>
+                <p className="text-white/70 text-base sm:text-lg leading-relaxed mb-6">
+                  {FOUNDER_STORY.body}
+                </p>
+                <p className="text-white font-semibold text-base mt-2 mb-6">
+                  {FOUNDER_STORY.founderName}
+                  <span className="text-white/50 font-normal">, {FOUNDER_STORY.founderRole}</span>
+                </p>
+                <a
+                  href="#build"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo('build');
+                  }}
+                  className="inline-flex items-center gap-2 text-accent font-semibold hover:text-white transition-colors"
+                >
+                  See our programs
+                  <ArrowRight size={16} />
+                </a>
+              </div>
+              <div className="lg:col-span-5">
+                <div className="photo-frame rounded-sm overflow-hidden group w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
+                  <div className="overflow-hidden bg-navy/20">
+                    <img
+                      src={FOUNDER_STORY.image}
+                      alt={FOUNDER_STORY.imageAlt}
+                      width={768}
+                      height={1024}
+                      className="w-full aspect-[3/4] object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-[1.02]"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </Section>
 
