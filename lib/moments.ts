@@ -22,14 +22,14 @@ export const WHATSAPP_JOIN =
 
 const gameJam = galleryImageById('game-jam-hero');
 
-const founderPhoto = galleryImageById('workshop-build');
-
 export const FOUNDER_STORY = {
   label: 'Founder story',
   title: 'Why Youth Innovators Hub exists',
-  body: 'In high school I studied software development — introduced to new languages and concepts, but never given enough time to practice what we learned. I had ideas I wanted to build, but not the skills to ship real projects. So I started Youth Innovators Hub: a safe, collaborative space where young people build real projects, learn from each other, and grow together.',
-  image: founderPhoto.src,
-  imageAlt: founderPhoto.alt,
+  body: 'In high school, I studied software development — exposed to programming languages and concepts, but rarely given the time to actually practice what we learned. I had ideas I wanted to build, but not yet the skills to turn them into real, shipped projects. So I started Youth Innovators Hub: a space where young people can build real things, learn from each other, and grow together — without waiting for permission or perfect conditions.',
+  image: '/images/founder-story.jpg',
+  imageAlt: 'YIHUB founder presenting at a tech talk with a microphone',
+  founderName: 'Niyomugabo Samuel',
+  founderRole: 'Founder',
 };
 
 export const MOMENTS: Moment[] = [
