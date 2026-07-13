@@ -11,6 +11,7 @@ import ProjectSubmissionPage from './pages/ProjectSubmissionPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import SchoolsPage from './pages/SchoolsPage';
 import SchoolDetailPage from './pages/SchoolDetailPage';
+import GalleryPage from './pages/GalleryPage';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -31,6 +32,7 @@ root.render(
         <Route path="/projects/:projectSlug" element={<ProjectDetailPage />} />
         <Route path="/schools" element={<SchoolsPage />} />
         <Route path="/schools/:schoolSlug" element={<SchoolDetailPage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
         {/* Activity pages (catch-all slug) — must be last */}
         <Route path="/:slug" element={<ActivityPage />} />
       </Routes>
