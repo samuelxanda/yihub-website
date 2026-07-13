@@ -32,7 +32,18 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Open [http://localhost:3000](http://localhost:3000).
+
+`@netlify/vite-plugin` emulates `/.netlify/functions` locally — no separate `netlify dev` step.
+
+For Airtable-backed pages locally, copy `.env.example` to `.env` and add your credentials:
+
+```
+AIRTABLE_API_KEY=pat...
+AIRTABLE_BASE_ID=app...
+```
+
+Same variables as in Netlify site settings.
 
 ---
 

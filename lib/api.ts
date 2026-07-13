@@ -7,20 +7,56 @@ import type { EventSummary, ProjectSummary, ProjectDetail, SchoolSummary } from 
 
 const API = '/.netlify/functions';
 
+const DEV_API_HINT =
+  'API returned HTML instead of JSON. Run `npm run dev` (Netlify Dev) — plain Vite cannot serve /.netlify/functions.';
+
+async function parseJsonResponse<T>(res: Response): Promise<T> {
+  const text = await res.text();
+  if (text.trimStart().startsWith('<')) {
+    throw new Error(DEV_API_HINT);
+  }
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    throw new Error(`Invalid JSON from API (${res.status})`);
+  }
+}
+
 /**
  * Fetch JSON from an Airtable-backed endpoint with cache-busting.
- * - Appends a timestamp query param to bypass any intermediate cache
- * - Uses cache: "no-store" to prevent browser caching
  */
 async function fetchJSON<T>(url: string): Promise<T> {
   const separator = url.includes('?') ? '&' : '?';
   const bustUrl = `${url}${separator}_t=${Date.now()}`;
   const res = await fetch(bustUrl, { cache: 'no-store' });
+  const body = await parseJsonResponse<T & { error?: string }>(res);
   if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error((body as any).error ?? `Request failed (${res.status})`);
+    throw new Error((body as { error?: string }).error ?? `Request failed (${res.status})`);
   }
-  return res.json();
+  return body;
+}
+
+/** POST JSON to a Netlify Function and parse the response. */
+export async function postJSON<T>(
+  path: string,
+  payload: unknown
+): Promise<T> {
+  const res = await fetch(`${API}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const body = await parseJsonResponse<T & { error?: string; message?: string; details?: string[] }>(res);
+  if (!res.ok) {
+    const err = new Error(body.error ?? body.message ?? `Request failed (${res.status})`) as Error & {
+      details?: string[];
+      status?: number;
+    };
+    err.details = body.details;
+    err.status = res.status;
+    throw err;
+  }
+  return body;
 }
 
 // ─── Events ──────────────────────────────────────────────
