@@ -334,18 +334,6 @@ const ActivityPage: React.FC = () => {
               <p className="text-xl sm:text-2xl md:text-3xl font-bold text-white/80 leading-relaxed">
                 {activity.description}
               </p>
-
-              {/* Show "View Projects" CTA only on the Showcase page */}
-              {activity.slug === 'showcase' && (
-                <Link
-                  to="/events"
-                  className="mt-8 md:mt-10 inline-flex items-center gap-3 bg-[#438CAF] text-white px-8 md:px-10 py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-base md:text-lg uppercase tracking-tight hover:bg-[#438CAF]/80 transition-all shadow-[4px_4px_0px_0px_rgba(255,255,255,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.15)] hover:-translate-y-0.5 group"
-                >
-                  <Trophy size={22} className="md:w-6 md:h-6" />
-                  View Projects
-                  <ChevronRight size={20} className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              )}
             </motion.div>
           </div>
         </section>
