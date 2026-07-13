@@ -1,37 +1,17 @@
-
 import React, { useEffect, useRef, useState } from 'react';
-import { 
-  Rocket, 
-  Code, 
-  Users, 
-  Zap, 
-  Terminal, 
-  Heart, 
-  Star, 
-  Globe, 
-  ChevronRight, 
-  Instagram, 
-  Twitter, 
-  Github,
-  ArrowUpRight,
-  ShieldCheck,
-  Hammer,
-  Sparkles,
-  Trophy,
-  Coffee,
-  MessageSquare,
-  Flame,
-  Gamepad,
-  Microchip,
-  Podcast,
-  Linkedin
-} from 'lucide-react';
+import { ArrowRight, Instagram, Linkedin, MessageSquare, Github, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Section from './components/Section';
-import Sticker from './components/Sticker';
-import { ACHIEVEMENTS, ACTIVITIES, UPCOMING_EVENTS } from './constants';
-import { useLocation } from 'react-router-dom';
+import { COMMUNITY_STAT } from './constants';
+import { HERO_IMAGE } from './lib/gallery';
+import {
+  WHATSAPP_JOIN,
+  MOMENTS,
+  PROGRAMS,
+  FOUNDER_STORY,
+  COMMUNITY_PHOTOS,
+} from './lib/moments';
 
 const App: React.FC = () => {
   const [activeNav, setActiveNav] = useState('home');
@@ -41,10 +21,8 @@ const App: React.FC = () => {
   const [contactMessage, setContactMessage] = useState('');
 
   const modalRef = useRef<HTMLDivElement>(null);
-
   const location = useLocation();
 
-  // Handle hash-based scrolling (e.g. when navigating from /#about on activity pages)
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.replace('#', '');
@@ -53,7 +31,7 @@ const App: React.FC = () => {
         if (element) {
           window.scrollTo({
             top: element.offsetTop - 80,
-            behavior: 'smooth'
+            behavior: 'smooth',
           });
         }
       }, 100);
@@ -83,9 +61,7 @@ const App: React.FC = () => {
     const last = focusable?.[focusable.length - 1];
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setShowContactModal(false);
-      }
+      if (e.key === 'Escape') setShowContactModal(false);
       if (e.key === 'Tab' && focusable && focusable.length) {
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
@@ -99,26 +75,25 @@ const App: React.FC = () => {
 
     document.addEventListener('keydown', handleKeyDown);
     first?.focus();
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [showContactModal]);
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'build', 'community'];
+      const sections = ['home', 'moments', 'about', 'build', 'community'];
       const scrollPos = window.scrollY + 100;
-
       for (const section of sections) {
         const element = document.getElementById(section);
-        if (element && scrollPos >= element.offsetTop && scrollPos < element.offsetTop + element.offsetHeight) {
+        if (
+          element &&
+          scrollPos >= element.offsetTop &&
+          scrollPos < element.offsetTop + element.offsetHeight
+        ) {
           setActiveNav(section);
           break;
         }
       }
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -128,45 +103,50 @@ const App: React.FC = () => {
     if (element) {
       window.scrollTo({
         top: element.offsetTop - 80,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
       window.history.pushState(null, '', `#${id}`);
       setIsMenuOpen(false);
     }
   };
 
+  const navLinkClass = (id: string) =>
+    `py-2 transition-colors font-body text-sm font-semibold ${
+      activeNav === id ? 'text-accent' : 'text-white/70 hover:text-white'
+    }`;
+
   return (
-    <div className="min-h-screen bg-[#193441] selection:bg-[#438CAF] selection:text-white">
-      {/* Contact Modal */}
+    <div className="min-h-screen bg-navy selection:bg-accent selection:text-white font-body">
       <AnimatePresence>
         {showContactModal && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
           >
             <div
               ref={modalRef}
               role="dialog"
               aria-modal="true"
               aria-label="Send a message"
-              className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full relative"
+              className="bg-white rounded-xl shadow-2xl p-6 sm:p-8 max-w-md w-full relative text-navy"
             >
-              {/* Close Button */}
               <button
                 onClick={() => setShowContactModal(false)}
-                className="absolute top-4 right-4 w-10 h-10 bg-[#438CAF] rounded-full flex items-center justify-center text-white hover:bg-[#438CAF]/80 transition-all"
+                className="absolute top-4 right-4 w-10 h-10 rounded-lg flex items-center justify-center text-navy/60 hover:bg-navy/5 transition-colors"
                 aria-label="Close modal"
               >
-                <Zap size={20} />
+                <X size={20} />
               </button>
-              <h2 className="text-2xl font-black text-[#193441] mb-4">Send a Message</h2>
+              <h2 className="font-display text-2xl font-bold mb-4">Send a message</h2>
               <form
-                onSubmit={e => {
+                onSubmit={(e) => {
                   e.preventDefault();
                   const phone = '250791845268';
-                  const text = encodeURIComponent(`Hi, my name is ${contactName}. ${contactMessage}`);
+                  const text = encodeURIComponent(
+                    `Hi, my name is ${contactName}. ${contactMessage}`
+                  );
                   window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
                   setShowContactModal(false);
                   setContactName('');
@@ -176,488 +156,593 @@ const App: React.FC = () => {
               >
                 <input
                   type="text"
-                  placeholder="Your Name"
+                  placeholder="Your name"
                   value={contactName}
-                  onChange={e => setContactName(e.target.value)}
-                  className="border border-[#438CAF]/30 rounded-lg px-4 py-2 text-[#193441] font-bold focus:outline-none focus:border-[#438CAF]"
+                  onChange={(e) => setContactName(e.target.value)}
+                  className="border border-accent/30 rounded-lg px-4 py-2.5 text-navy font-semibold focus:outline-none focus:border-accent"
                   required
                 />
                 <textarea
-                  placeholder="Your Message"
+                  placeholder="Your message"
                   value={contactMessage}
-                  onChange={e => setContactMessage(e.target.value)}
-                  className="border border-[#438CAF]/30 rounded-lg px-4 py-2 text-[#193441] font-bold focus:outline-none focus:border-[#438CAF] min-h-[80px]"
+                  onChange={(e) => setContactMessage(e.target.value)}
+                  className="border border-accent/30 rounded-lg px-4 py-2.5 text-navy font-semibold focus:outline-none focus:border-accent min-h-[80px]"
                   required
                 />
                 <button
                   type="submit"
-                  className="bg-[#438CAF] text-white font-black py-2 rounded-lg hover:bg-[#193441] transition-all"
+                  className="bg-accent text-white font-display font-bold py-3 rounded-lg hover:bg-navy transition-colors"
                 >
-                  Send
+                  Send via WhatsApp
                 </button>
               </form>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Navigation Bar */}
+
       <header>
-      <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3 md:py-4 flex items-center justify-between bg-[#193441]/90 backdrop-blur-xl border-b border-white/5" aria-label="Main navigation">
-        {/* Logo inside navbar */}
-        <a 
-          href="#home"
-          onClick={(e) => { e.preventDefault(); scrollTo('home'); }}
-          className="cursor-pointer hover:scale-105 transition-all duration-300 flex-shrink-0 inline-block"
+        <nav
+          className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3 md:py-4 flex items-center justify-between bg-navy/90 backdrop-blur-xl border-b border-white/5"
+          aria-label="Main navigation"
         >
-          <img 
-            src="/logo.png" 
-            alt="Youth Innovators Hub (YIHUB) — Rwanda youth tech community" 
-            className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain select-none"
-          />
-        </a>
+          <a
+            href="#home"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollTo('home');
+            }}
+            className="flex-shrink-0 inline-block"
+          >
+            <img
+              src="/logo.png"
+              alt="Youth Innovators Hub (YIHUB) — Rwanda youth tech community"
+              className="h-9 sm:h-11 md:h-12 w-auto object-contain select-none"
+            />
+          </a>
 
-        <div className="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest">
-          {['about', 'build'].map((id) => (
-            <a 
-              key={id}
-              href={`#${id}`}
-              onClick={(e) => { e.preventDefault(); scrollTo(id); }} 
-              className={`group relative py-2 transition-all ${activeNav === id ? 'text-[#438CAF]' : 'text-white hover:text-[#438CAF]'}`}
+          <div className="hidden lg:flex items-center gap-8">
+            <a
+              href="#about"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollTo('about');
+              }}
+              className={navLinkClass('about')}
             >
-              {id === 'build' ? 'What We Do' : id.charAt(0).toUpperCase() + id.slice(1)}
-              <span className={`absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform ${activeNav === id ? 'scale-x-100' : ''}`} />
+              About
             </a>
-          ))}
-          <Link
-            to="/events"
-            className="group relative py-2 transition-all text-white hover:text-[#438CAF]"
-          >
-            Events
-            <span className="absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform" />
-          </Link>
-          <a 
-            href="#community"
-            onClick={(e) => { e.preventDefault(); scrollTo('community'); }} 
-            className={`group relative py-2 transition-all ${activeNav === 'community' ? 'text-[#438CAF]' : 'text-white hover:text-[#438CAF]'}`}
-          >
-            Community
-            <span className={`absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform ${activeNav === 'community' ? 'scale-x-100' : ''}`} />
-          </a>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <a 
-            href="https://chat.whatsapp.com/DgU4FYHIqltLjGThwEIFZp"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-white text-[#193441] px-6 md:px-8 py-2.5 font-black uppercase tracking-tighter rounded-full transform hover:scale-105 transition-all shadow-[4px_4px_0px_0px_#438CAF] active:shadow-none active:translate-y-1"
-          >
-            Join the Hub
-          </a>
-          
-          <button 
-            className="lg:hidden p-2 text-white bg-white/10 rounded-full"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
-          >
-            {isMenuOpen ? <Zap className="text-[#438CAF]" /> : <Terminal />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[55] bg-[#193441] pt-24 px-6 sm:px-10 flex flex-col lg:hidden"
-          >
-            {/* Close Button */}
-            <button 
-              onClick={() => setIsMenuOpen(false)}
-              className="absolute top-4 right-4 w-12 h-12 bg-[#438CAF] rounded-full flex items-center justify-center text-white hover:bg-[#438CAF]/80 transition-all"
-              aria-label="Close menu"
+            <a
+              href="#build"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollTo('build');
+              }}
+              className={navLinkClass('build')}
             >
-              <Zap size={24} />
-            </button>
-            
-            <div className="flex flex-col space-y-6 sm:space-y-8 mt-8">
-              {['about', 'build'].map((id) => (
-                <a 
-                  key={id}
-                  href={`#${id}`}
-                  onClick={(e) => { e.preventDefault(); scrollTo(id); }}
-                  className="text-3xl sm:text-4xl md:text-5xl font-black uppercase text-left tracking-tighter hover:text-[#438CAF] transition-colors"
-                >
-                  {id === 'build' ? 'What We Do' : id.charAt(0).toUpperCase() + id.slice(1)}
-                </a>
-              ))}
-              <Link
-                to="/events"
-                onClick={() => setIsMenuOpen(false)}
-                className="text-3xl sm:text-4xl md:text-5xl font-black uppercase text-left tracking-tighter hover:text-[#438CAF] transition-colors"
-              >
-                Events
-              </Link>
-              <a 
-                href="#community"
-                onClick={(e) => { e.preventDefault(); scrollTo('community'); }}
-                className="text-3xl sm:text-4xl md:text-5xl font-black uppercase text-left tracking-tighter hover:text-[#438CAF] transition-colors"
-              >
-                Community
-              </a>
-            </div>
-            
-            {/* Mobile CTA */}
-            <a 
-              href="https://chat.whatsapp.com/DgU4FYHIqltLjGThwEIFZp"
+              What we do
+            </a>
+            <a
+              href="#community"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollTo('community');
+              }}
+              className={navLinkClass('community')}
+            >
+              Community
+            </a>
+            <Link
+              to="/gallery"
+              className="text-white/70 hover:text-white transition-colors text-sm font-semibold"
+            >
+              Gallery
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href={WHATSAPP_JOIN}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-auto mb-8 w-full py-4 bg-[#438CAF] text-white font-black text-lg uppercase tracking-tighter rounded-xl text-center shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)]"
+              className="hidden sm:inline-flex bg-white text-navy px-5 py-2.5 text-sm font-display font-bold rounded-lg hover:bg-accent hover:text-white transition-colors"
             >
               Join the Hub
             </a>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <button
+              className="lg:hidden p-2.5 text-white bg-white/10 rounded-lg"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
+        </nav>
+
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              className="fixed inset-0 z-[55] bg-navy pt-24 px-6 flex flex-col lg:hidden"
+            >
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="absolute top-4 right-4 w-11 h-11 bg-accent rounded-lg flex items-center justify-center text-white"
+                aria-label="Close menu"
+              >
+                <X size={22} />
+              </button>
+              <div className="flex flex-col gap-5 mt-6">
+                {[
+                  { id: 'about', label: 'About' },
+                  { id: 'build', label: 'What we do' },
+                  { id: 'community', label: 'Community' },
+                  { to: '/gallery', label: 'Gallery', isRoute: true },
+                ].map((item) =>
+                  'isRoute' in item && item.isRoute ? (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="font-display text-3xl sm:text-4xl font-bold tracking-tight hover:text-accent transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <a
+                      key={item.id}
+                      href={`#${item.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollTo(item.id!);
+                      }}
+                      className="font-display text-3xl sm:text-4xl font-bold tracking-tight hover:text-accent transition-colors"
+                    >
+                      {item.label}
+                    </a>
+                  ),
+                )}
+              </div>
+              <a
+                href={WHATSAPP_JOIN}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto mb-10 w-full py-4 bg-accent text-white font-display font-bold text-lg rounded-xl text-center"
+              >
+                Join the Hub
+              </a>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       <main>
-      {/* Hero Section */}
-      <Section id="home" className="min-h-screen flex flex-col justify-center relative p-0 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769309314/IMG_6025_t1itto.jpg" 
-            alt="Youth Innovators Hub hackathon event in Rwanda — students building tech projects together" 
-            className="w-full h-full object-cover opacity-50 "
-          />
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#193441] via-[#193441]/40 to-transparent" />
-        </div>
-
-        <div className="relative z-20 max-w-6xl mx-auto text-left px-4 sm:px-8 md:px-16 lg:px-24 pt-24 md:pt-0">
-          {/* Sticker Scatter - Repositioned for mobile compatibility */}
-          {/* <div className="hidden sm:block">
-            
-            <Sticker text="practice > theory" Icon={ShieldCheck} className="top-[10%] right-[5%] md:top-[15%] md:right-[10%] -rotate-6" delay="0s" />
-            <Sticker text="Built by students" Icon={Hammer} className="bottom-[15%] right-[5%] md:bottom-[20%] md:right-[5%] rotate-12" delay="0.5s" />
-            <Sticker text="shipRealProjects()" Icon={Rocket} className="top-[35%] left-[0%] md:top-[40%] md:left-[5%] rotate-2" delay="0.8s" />
-            <Sticker text="learnByDoing();" Icon={Sparkles} className="bottom-[5%] left-[10%] md:bottom-[-12%] md:left-[40%] -rotate-12" delay="1.2s" />
-          </div> */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-[0.85] md:leading-[0.8] tracking-tighter mb-6 md:mb-8 md:mt-10 italic uppercase max-w-4xl">
-             <span className="sr-only">Youth Innovators Hub — </span>SHAPING <span className="text-white drop-shadow-[3px_3px_0px_#438CAF] md:drop-shadow-[6px_6px_0px_#438CAF]">TOMORROW</span><br/>THROUGH<span className="text-[#438CAF] drop-shadow-[2px_2px_0px_#fff] md:drop-shadow-[4px_4px_0px_#fff]"><br />TECH &  INNOVATION.</span>
-            </h1>
-          </motion.div>
-
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-className="text-base sm:text-lg md:text-xl font-bold max-w-2xl mb-8 md:mb-12 text-white/80 leading-snug"
-          >
-            We're a youth-led tech community in Rwanda — student builders who learn by shipping real projects,&nbsp;<span className="text-white border-b-2 md:border-b-4 border-[#438CAF]">together.</span>
-          </motion.p>
-
-          <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4 md:gap-6">
-            <a 
-              href="https://chat.whatsapp.com/DgU4FYHIqltLjGThwEIFZp"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 sm:px-8 md:px-10 py-4 md:py-5 bg-[#438CAF] text-white font-black text-base sm:text-lg md:text-xl uppercase tracking-tighter rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 md:gap-4 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] md:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)]"
-            >
-              Start Building
-              <Zap fill="currentColor" size={20} className="md:w-6 md:h-6" />
-            </a>
-            <a 
-              href="#build"
-              onClick={(e) => { e.preventDefault(); scrollTo('build'); }}
-              className="text-white/80 font-black text-base sm:text-lg md:text-xl uppercase tracking-tighter hover:text-[#438CAF] transition-colors"
-            >
-              See our programs
-            </a>
+        {/* Hero */}
+        <Section id="home" className="min-h-screen flex flex-col justify-center relative p-0 overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <img
+              src={HERO_IMAGE.src}
+              alt={HERO_IMAGE.alt}
+              className="w-full h-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/60 to-navy/20" />
           </div>
-        </div>
-      </Section>
 
-      {/* The Manifesto - Card Style */}
-      <Section id="about" className="bg-white text-[#193441]" dark={false}>
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 items-center">
-            <div className="lg:col-span-5">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-6 md:mb-8 leading-none uppercase italic">
-                THIS IS NOT A <br/><span className="text-[#438CAF]">CLASS ROOM.</span>
-              </h2>
-              <p className="text-base sm:text-lg md:text-xl font-bold text-[#193441]/70 leading-relaxed mb-6 md:mb-8">
-                <span className="text-[#438CAF] border-b-4 md:border-b-8 border-white">The Youth Innovators Hub way.</span><br />We don't do boring traditional classes. At YIHUB, we run high-energy sprints, messy code sessions, and breakthrough moments — built by student innovators, right here in Rwanda.
+          <div className="relative z-20 max-w-5xl mx-auto w-full px-5 sm:px-8 md:px-12 lg:px-16 py-28 md:py-32">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
+            >
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-bold leading-[1.08] tracking-tight mb-5 max-w-3xl">
+                Shaping tomorrow
+                <br />
+                through
+                <br />
+                <span className="text-accent">tech &amp; innovation.</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-white/80 font-normal max-w-xl mb-10 leading-relaxed">
+                We&apos;re a youth-led tech community in Rwanda — builders who learn by shipping real projects,{' '}
+                <span className="text-white border-b-2 border-accent">together.</span>
               </p>
-              <div className="p-4 md:p-6 bg-[#438CAF]/10 rounded-xl md:rounded-2xl border-2 border-dashed border-[#438CAF]">
-                <div className="flex items-center gap-2 md:gap-4 mb-3 md:mb-4 text-[#438CAF]">
-                  <MessageSquare size={20} className="md:w-6 md:h-6" />
-                  <span className="font-black uppercase tracking-wider md:tracking-widest text-xs md:text-sm">Founder's Note</span>
-                </div>
-                <p className="font-bold italic text-sm md:text-lg leading-snug">
-                  "The best way to learn to build is by... well, building. Everything else is just noise."
-                </p>
-              </div>
-            </div>
-            
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-4 p-4 md:p-6 rounded-2xl md:rounded-[2rem] shadow-lg">
-              {[
-                { t: "Build First", d: "Ship projects while others are still reading documentation.", i: Hammer },
-                { t: "Ask Loudly", d: "No stupid questions. Just missing context.", i: MessageSquare },
-                { t: "Fail Fast", d: "Breaking things is just learning in disguise.", i: Zap },
-                { t: "Grow Together", d: "Build your network by building cool stuff.", i: Users }
-              ].map((item, idx) => (
-                <div key={idx} className="p-6 md:p-8 bg-[#193441] text-white rounded-2xl md:rounded-[2rem] shadow-xl hover:-translate-y-2 transition-transform border-2 md:border-4 border-[#438CAF]/20">
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6 ">
-                    <item.i size={24} className="md:w-8 md:h-8" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tighter mb-1 md:mb-2">{item.t}</h3>
-                  <p className="text-white/60 font-bold leading-snug text-sm md:text-base">{item.d}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mt-10 md:mt-16 text-base md:text-xl font-bold italic opacity-60">
-            <span className="border-b-2 md:border-b-4 border-[#438CAF]">—"The YIHUB Manifesto"</span>
-          </div>
-        </div>
-      </Section>
-
-      {/* Activities - Asymmetrical Grid */}
-      <Section id="build" title="So..... what happens here?">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-          {[
-            { title: "Hackathons", slug: "hackathons", desc: "Pure creation, caffeine, and zero sleep. Build fast, learn faster", icon: Flame, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "Workshops", slug: "workshops", desc: "Practical skills for the modern builder. Hands-on, no boring slides", icon: Terminal, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "CodeLift", slug: "codelift", desc: "Our outreach program bringing hands-on coding and tech skills to secondary school students across Rwanda.", icon: Rocket, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "Showcase", slug: "showcase", desc: "Flex your projects and get feedback from pros.", icon: Trophy, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "Meetups", slug: "meetups", desc: "Hang out with people who get your nerdy jokes.", icon: Coffee, color: "bg-[#438CAF]/30 backdrop-blur-md" },
-            { title: "Tech Talks", slug: "tech-talks", desc: "Real people, real stories.", icon: Podcast, color: "bg-[#438CAF]/30 backdrop-blur-md" }
-          ].map((activity, idx) => (
-            <Link key={idx} to={`/${activity.slug}`} className="block">
-            <motion.div 
-              whileHover={{ y: -10 }}
-              className={`${activity.color} p-6 md:p-8 lg:p-10 rounded-2xl md:rounded-[2rem] lg:rounded-[2.5rem] relative group overflow-hidden flex flex-col justify-between min-h-[240px] md:min-h-[280px] lg:min-h-[300px] shadow-xl md:shadow-2xl`}
-            >
-              <div>
-                <activity.icon size={36} className="md:w-10 md:h-10 lg:w-12 lg:h-12 mb-4 md:mb-5 lg:mb-6 group-hover:scale-110 transition-transform" />
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tighter mb-2 md:mb-3 lg:mb-4">{activity.title}</h3>
-                <p className="text-base md:text-lg lg:text-xl font-bold opacity-80 leading-snug max-w-sm">{activity.desc}</p>
-              </div>
-              <div className="flex justify-end mt-4">
-                <div className="w-10 h-10 md:w-11 md:h-11 lg:w-12 lg:h-12 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-[#193441] transition-all">
-                  <ArrowUpRight size={20} className="md:w-5 md:h-5 lg:w-6 lg:h-6" />
-                </div>
-              </div>
-              {/* Background Number Accent */}
-              <div className="absolute -bottom-6 md:-bottom-8 lg:-bottom-10 -right-2 md:-right-3 lg:-right-4 text-[8rem] md:text-[12rem] lg:text-[15rem] font-black opacity-5 pointer-events-none select-none italic group-hover:opacity-10 transition-opacity">
-                {idx + 1}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <a
+                  href={WHATSAPP_JOIN}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-accent text-white font-display font-bold text-base sm:text-lg rounded-lg hover:bg-white hover:text-navy transition-colors"
+                >
+                  Start Building
+                  <ArrowRight size={18} />
+                </a>
+                <a
+                  href="#build"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo('build');
+                  }}
+                  className="inline-flex items-center justify-center text-white/80 font-semibold text-base sm:text-lg hover:text-accent transition-colors"
+                >
+                  See our programs
+                </a>
               </div>
             </motion.div>
-            </Link>
-          ))}
-        </div>
-      </Section>
+          </div>
+        </Section>
 
-      {/* Community / Proof Section Combined */}
-      <Section id="community" className="bg-[#193441] relative">
-        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-[#193441] to-transparent z-10" />
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-24 items-center max-w-7xl mx-auto px-4 md:px-6">
-          {/* Text Content - Shows first on mobile */}
-          <div className="order-1 lg:order-2">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-full text-xs font-black uppercase mb-6 md:mb-8 shadow-lg">
-              <Heart size={16} fill="white" />
-              <span>We Love Builders</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-6 md:mb-8 leading-none uppercase italic">
-              FIND YOUR <br/><span className="text-[#438CAF] border-b-4 md:border-b-8 border-white">PEOPLE.</span>
+        {/* Moments — LinkedIn-backed proof */}
+        <Section id="moments" className="bg-navy py-20 md:py-28">
+          <div className="max-w-6xl mx-auto px-5 md:px-8">
+            <p className="text-accent text-sm font-semibold tracking-wide mb-3">Moments</p>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 max-w-2xl">
+              Real rooms. Real energy.
             </h2>
-            <p className="text-base sm:text-lg md:text-xl font-bold text-white/80 mb-8 md:mb-12 leading-snug">
-              <span className="text-white border-b-2 md:border-b-4 border-[#438CAF]">Stop learning in a vacuum.</span><br className="hidden sm:block" /><span className="sm:hidden"> </span>Join the Youth Innovators Hub and connect with student builders across Rwanda who are as obsessed with creating tech as you are.
+            <p className="text-white/60 text-lg max-w-xl mb-14 md:mb-16">
+              Game Jams, workshops, and outreach — real rooms where young builders across Rwanda show up to learn and ship.
             </p>
-            
-            <div className="grid grid-cols-2 gap-4 md:gap-8">
-              {ACHIEVEMENTS.slice(0, 2).map((stat, i) => (
-                <div key={i} className="bg-white/5 p-4 md:p-6 rounded-2xl md:rounded-3xl border-2 border-white/10">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-black mb-1">{stat.value}</div>
-                  <div className="text-[10px] sm:text-xs font-black uppercase text-[#438CAF] tracking-wider md:tracking-widest">{stat.label}</div>
-                </div>
+
+            <div className="flex flex-col gap-16 md:gap-24">
+              {MOMENTS.map((moment, i) => (
+                <motion.article
+                  key={moment.id}
+                  initial={{ opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-80px' }}
+                  transition={{ duration: 0.55, delay: 0.05 }}
+                  className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center ${
+                    i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''
+                  }`}
+                >
+                  <div className="lg:col-span-7">
+                    <div className="photo-frame rounded-sm overflow-hidden group">
+                      <div className="overflow-hidden">
+                        <img
+                          src={moment.image}
+                          alt={moment.imageAlt}
+                          className="w-full aspect-[16/10] object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="lg:col-span-5">
+                    <p className="text-accent text-xs font-semibold uppercase tracking-widest mb-3">
+                      {moment.label}
+                    </p>
+                    <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight mb-4 leading-snug">
+                      {moment.title}
+                    </h3>
+                    <p className="text-white/70 text-base sm:text-lg leading-relaxed mb-6">
+                      {moment.body}
+                    </p>
+                    {moment.href && (
+                      <Link
+                        to={moment.href}
+                        className="inline-flex items-center gap-2 text-accent font-semibold hover:text-white transition-colors"
+                      >
+                        Learn more
+                        <ArrowRight size={16} />
+                      </Link>
+                    )}
+                  </div>
+                </motion.article>
               ))}
             </div>
           </div>
+        </Section>
 
-          {/* Images Grid - Shows second on mobile */}
-          <div className="relative order-2 lg:order-1 w-full">
-             <div className="grid grid-cols-2 gap-4 sm:gap-4 md:gap-6 relative">
-                <div className="space-y-4 sm:space-y-4 md:space-y-6 pt-6 md:pt-12">
-                  <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-white shadow-xl md:shadow-2xl transform -rotate-2 md:-rotate-3 hover:rotate-0 transition-transform">
-                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769312817/_NIY3042_hikvkv.jpg" alt="YIHUB community members collaborating at a tech event in Rwanda" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
+        {/* Manifesto */}
+        <Section id="about" className="bg-white text-navy py-20 md:py-28" dark={false}>
+          <div className="max-w-6xl mx-auto px-5 md:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+              <div className="lg:col-span-5">
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-[1.1]">
+                  This is not a classroom.
+                </h2>
+                <p className="text-navy/70 text-lg leading-relaxed mb-8">
+                  Youth Innovators Hub is a nonprofit space where young people in Rwanda collaborate, learn, and build digital solutions for social good — through mentorship, hackathons, and hands-on work.
+                </p>
+                <blockquote className="border-l-2 border-accent pl-5 text-navy/80 italic leading-relaxed">
+                  &ldquo;The best way to learn to build is by… well, building. Everything else is just noise.&rdquo;
+                  <footer className="mt-2 text-sm not-italic font-semibold text-navy/50">
+                    — Founder&apos;s note
+                  </footer>
+                </blockquote>
+              </div>
+
+              <div className="lg:col-span-7 grid grid-cols-2 gap-3 sm:gap-4">
+                {COMMUNITY_PHOTOS.map((photo, idx) => (
+                  <div
+                    key={photo.src}
+                    className={`photo-frame rounded-sm overflow-hidden ${
+                      idx === 0 || idx === 3 ? 'mt-0 sm:mt-8' : ''
+                    } ${idx === 1 || idx === 2 ? 'sm:-mt-4' : ''}`}
+                  >
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      className="w-full aspect-[4/5] object-cover hover:scale-105 transition-transform duration-700"
+                    />
                   </div>
-                  <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-[#438CAF] shadow-xl md:shadow-2xl transform rotate-2 md:rotate-3 hover:rotate-0 transition-transform">
-                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313717/IMG_5954_ntc9ku.jpg" alt="Students building projects at a Youth Innovators Hub workshop" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
+                ))}
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        {/* Founder story */}
+        <Section id="founder-story" className="bg-navy py-20 md:py-28">
+          <div className="max-w-6xl mx-auto px-5 md:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              <div className="lg:col-span-7 lg:order-2">
+                <div className="photo-frame rounded-sm overflow-hidden group">
+                  <div className="overflow-hidden">
+                    <img
+                      src={FOUNDER_STORY.image}
+                      alt={FOUNDER_STORY.imageAlt}
+                      className="w-full aspect-[16/10] object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
                   </div>
                 </div>
-                <div className="space-y-4 sm:space-y-4 md:space-y-6 md:mt-10">
-                  <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-[#438CAF] shadow-xl md:shadow-2xl transform rotate-1 md:rotate-2 hover:rotate-0 transition-transform">
-                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313728/_NIY3030_2_mdqxob.jpg" alt="Youth innovators presenting their tech projects in Kigali" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
+              </div>
+              <div className="lg:col-span-5 lg:order-1">
+                <p className="text-accent text-xs font-semibold uppercase tracking-widest mb-3">
+                  {FOUNDER_STORY.label}
+                </p>
+                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-4 leading-snug">
+                  {FOUNDER_STORY.title}
+                </h2>
+                <p className="text-white/70 text-base sm:text-lg leading-relaxed mb-6">
+                  {FOUNDER_STORY.body}
+                </p>
+                <a
+                  href="#build"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo('build');
+                  }}
+                  className="inline-flex items-center gap-2 text-accent font-semibold hover:text-white transition-colors"
+                >
+                  See our programs
+                  <ArrowRight size={16} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        {/* Programs — editorial list */}
+        <Section id="build" className="bg-navy py-20 md:py-28">
+          <div className="max-w-4xl mx-auto px-5 md:px-8">
+            <p className="text-accent text-sm font-semibold tracking-wide mb-3">What we do</p>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-12 md:mb-16">
+              Programs for people who want to make things.
+            </h2>
+            <ul className="divide-y divide-white/10 border-t border-b border-white/10">
+              {PROGRAMS.map((program) => (
+                <li key={program.slug}>
+                  <Link
+                    to={`/${program.slug}`}
+                    className="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 py-6 md:py-7 hover:bg-white/[0.03] -mx-2 px-2 transition-colors"
+                  >
+                    <span className="font-display text-xl sm:text-2xl font-bold tracking-tight group-hover:text-accent transition-colors sm:min-w-[160px]">
+                      {program.title}
+                    </span>
+                    <span className="text-white/55 text-base sm:text-lg flex-1 leading-snug">
+                      {program.desc}
+                    </span>
+                    <ArrowRight
+                      size={18}
+                      className="hidden sm:block text-white/30 group-hover:text-accent group-hover:translate-x-1 transition-all shrink-0 mt-1"
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Section>
+
+        {/* Community */}
+        <Section id="community" className="bg-navy relative py-20 md:py-28">
+          <div className="max-w-6xl mx-auto px-5 md:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div>
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-[1.1]">
+                  Find your people.
+                </h2>
+                <p className="text-white/70 text-lg leading-relaxed mb-8">
+                  Stop learning alone. Join student builders across Rwanda who are just as obsessed with shipping as you are.
+                </p>
+                <div className="inline-block border border-white/15 rounded-xl px-6 py-5 bg-white/5">
+                  <div className="font-display text-4xl sm:text-5xl font-extrabold text-accent mb-1">
+                    {COMMUNITY_STAT.value}
                   </div>
-                  <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-white shadow-xl md:shadow-2xl transform -rotate-1 md:-rotate-2 hover:rotate-0 transition-transform md:mt-20  ">
-                    <img src="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769313997/_NIY3037_urxedm.jpg" alt="YIHUB hackathon participants coding together" className="w-full h-32 sm:h-40 md:h-48 lg:h-auto object-cover" />
+                  <div className="text-sm sm:text-base text-white/60 font-semibold">
+                    {COMMUNITY_STAT.label}
                   </div>
                 </div>
-             </div>
-             {/* Floating Achievement Badge */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-[#193441] p-4 sm:p-6 md:p-6 rounded-xl sm:rounded-2xl md:rounded-[2rem] shadow-[8px_8px_0px_0px_#438CAF] md:shadow-[9px_10px_0px_0px_#438CAF] z-10 flex items-center gap-4 sm:gap-4 md:gap-6">
-                <div className="text-2xl sm:text-3xl md:text-5xl font-black">120+</div>
-                <div className="text-[8px] sm:text-[10px] md:text-xs font-black uppercase tracking-wider md:tracking-widest leading-none">Builders<br/>Strong.</div>
-             </div>
-          </div>
-        </div>
-      </Section>
-      {/* Final Call - The Energy Core */}
-      <Section id="cta" className="text-center text-[#193441] relative overflow-hidden">
-        {/* Community Background Image */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="/community.jfif" 
-            alt="Youth Innovators Hub community gathering" 
-            className="w-full h-full object-cover opacity-10"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-white via-white/95 to-white" />
-        </div>
+                <Link
+                  to="/gallery"
+                  className="inline-flex items-center gap-2 mt-6 text-accent font-semibold hover:text-white transition-colors"
+                >
+                  View full gallery
+                  <ArrowRight size={16} />
+                </Link>
+              </div>
 
-        <motion.div 
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          className="relative z-10 max-w-4xl mx-auto px-4 md:px-6"
-        >
-          <div className="inline-flex items-center gap-2 md:gap-4 px-4 md:px-6 py-2 md:py-3 bg-[#438CAF] text-white rounded-xl md:rounded-2xl font-black uppercase tracking-wider md:tracking-widest text-xs md:text-sm mb-8 md:mb-12 shadow-2xl animate-bounce">
-            <Rocket size={20} className="md:w-6 md:h-6" />
-            <span>Ready to ship?</span>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                {COMMUNITY_PHOTOS.slice(0, 4).map((photo, idx) => (
+                  <div
+                    key={`comm-${photo.src}`}
+                    className={`overflow-hidden rounded-lg border border-white/10 ${
+                      idx % 2 === 1 ? 'translate-y-4 sm:translate-y-6' : ''
+                    }`}
+                  >
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      className="w-full h-36 sm:h-44 md:h-48 object-cover hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-6 md:mb-12 uppercase italic leading-[0.85]">
-            START YOUR <br/><span className="text-[#438CAF] drop-shadow-[2px_2px_0px_#193441] md:drop-shadow-[4px_4px_0px_#193441]">JOURNEY.</span>
-          </h2>
-          
-          <p className="text-base sm:text-lg md:text-xl font-bold mb-10 md:mb-16 leading-snug px-2">
-            No applications. No fees. No excuses. <br className="hidden sm:block"/><span className="sm:hidden"> </span>Just you, the code, and 120+ builders across Rwanda.
-          </p>
-          
-          <div className="flex flex-col items-center justify-center gap-6 md:gap-8">
-            <a 
-              href="https://chat.whatsapp.com/DgU4FYHIqltLjGThwEIFZp"
+        </Section>
+
+        {/* Join CTA */}
+        <Section id="cta" className="bg-white text-navy py-20 md:py-28" dark={false}>
+          <div className="max-w-3xl mx-auto px-5 md:px-8 text-center">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-5 leading-[1.1]">
+              Ready when you are.
+            </h2>
+            <p className="text-navy/65 text-lg mb-10 leading-relaxed">
+              No applications. No fees. Just you, the work, and a community that builds in public.
+            </p>
+            <a
+              href={WHATSAPP_JOIN}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full max-w-md sm:w-auto px-8 sm:px-12 md:px-16 py-5 md:py-8 bg-[#193441] text-white font-black text-xl sm:text-2xl md:text-3xl uppercase tracking-tighter rounded-2xl md:rounded-[2rem] shadow-[8px_8px_0px_0px_#438CAF] md:shadow-[15px_15px_0px_0px_#438CAF] hover:translate-x-1 hover:-translate-y-1 md:hover:translate-x-2 md:hover:-translate-y-2 transition-all active:shadow-none active:translate-x-0 active:translate-y-0 group inline-flex items-center justify-center"
+              className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-navy text-white font-display font-bold text-lg rounded-xl hover:bg-accent transition-colors"
             >
-              JOIN THE HUB
-              <ChevronRight className="inline-block ml-2 md:ml-4 group-hover:translate-x-2 transition-transform w-6 h-6 md:w-8 md:h-8" />
+              Join the Hub
+              <ArrowRight size={18} />
             </a>
           </div>
-        </motion.div>
-      </Section>
-
+        </Section>
       </main>
 
-      {/* Footer - Solid & Professional yet Bold */}
-      <footer className="py-12 md:py-16 lg:py-24 px-4 md:px-8 lg:px-16 bg-[#193441] border-t-4 md:border-t-8 border-[#438CAF]" role="contentinfo">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row justify-between gap-10 md:gap-12 lg:gap-16 mb-12 md:mb-16 lg:mb-20">
-            <div className="max-w-md">
-               <a 
-          href="#home"
-          onClick={(e) => { e.preventDefault(); scrollTo('home'); }}
-          className="cursor-pointer hover:scale-105 transition-all duration-300 flex-shrink-0 inline-block"
-        >
-          <img 
-            src="/logo.png" 
-            alt="Youth Innovators Hub" 
-            className="h-12 sm:h-12 md:h-14 lg:h-16 w-auto object-contain select-none"
-          />
-        </a>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white/50 mb-6 md:mb-8 leading-tight italic">
-                Youth Innovators Hub — Rwanda's youth tech community where student builders ship real projects.
+      <footer
+        className="py-14 md:py-20 px-5 md:px-8 lg:px-16 bg-navy border-t border-accent/40"
+        role="contentinfo"
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row justify-between gap-12 mb-12">
+            <div className="max-w-sm">
+              <a
+                href="#home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollTo('home');
+                }}
+                className="inline-block mb-5"
+              >
+                <img
+                  src="/logo.png"
+                  alt="Youth Innovators Hub"
+                  className="h-11 w-auto object-contain"
+                />
+              </a>
+              <p className="text-white/50 text-base leading-relaxed mb-6">
+                Youth Innovators Hub — Rwanda&apos;s youth tech community where student builders ship real projects.
               </p>
-              <div className="flex gap-3 md:gap-4">
-                {/* Instagram */}
+              <div className="flex gap-2">
+                {[
+                  {
+                    href: 'https://www.instagram.com/youthinnovatorshub/',
+                    label: 'Instagram',
+                    Icon: Instagram,
+                  },
+                  {
+                    href: 'https://www.linkedin.com/company/youthinnovatorshub/',
+                    label: 'LinkedIn',
+                    Icon: Linkedin,
+                  },
+                  { href: 'https://wa.me/250791845268', label: 'WhatsApp', Icon: MessageSquare },
+                  {
+                    href: 'https://github.com/Youth-Innovators-Hub/',
+                    label: 'Github',
+                    Icon: Github,
+                  },
+                ].map(({ href, label, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-accent transition-colors border border-white/10"
+                    aria-label={label}
+                  >
+                    <Icon size={18} />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-10 text-sm">
+              <div className="space-y-3">
+                <span className="text-accent font-semibold block mb-3">Hub</span>
+                <a
+                  href="#about"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo('about');
+                  }}
+                  className="block text-white/55 hover:text-accent transition-colors"
+                >
+                  About
+                </a>
+                <a
+                  href="#build"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo('build');
+                  }}
+                  className="block text-white/55 hover:text-accent transition-colors"
+                >
+                  Programs
+                </a>
+<a
+                  href="#community"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo('community');
+                  }}
+                  className="block text-white/55 hover:text-accent transition-colors"
+                >
+                  Community
+                </a>
+                <Link
+                  to="/gallery"
+                  className="block text-white/55 hover:text-accent transition-colors"
+                >
+                  Gallery
+                </Link>
+              </div>
+              <div className="space-y-3">
+                <span className="text-accent font-semibold block mb-3">Connect</span>
+                <button
+                  type="button"
+                  onClick={() => setShowContactModal(true)}
+                  className="block text-white/55 hover:text-accent transition-colors text-left"
+                >
+                  Send a message
+                </button>
                 <a
                   href="https://www.instagram.com/youthinnovatorshub/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10"
-                  aria-label="Youth Innovators Hub on Instagram"
+                  className="block text-white/55 hover:text-accent transition-colors"
                 >
-                  <Instagram size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                  Instagram
                 </a>
-                {/* LinkedIn */}
                 <a
                   href="https://www.linkedin.com/company/youthinnovatorshub/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10"
-                  aria-label="Youth Innovators Hub on LinkedIn"
+                  className="block text-white/55 hover:text-accent transition-colors"
                 >
-                  <Linkedin size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                  LinkedIn
                 </a>
-                {/* Github */}
-                <a
-                  href="https://wa.me/250791845268"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10"
-                  aria-label="WhatsApp"
-                >
-                  <MessageSquare size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                </a>
-                <a
-                  href="https://github.com/Youth-Innovators-Hub/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10"
-                  aria-label="Github"
-                >
-                  <Github size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                </a>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 lg:gap-16 text-[10px] sm:text-xs md:text-sm font-black uppercase tracking-wider md:tracking-widest">
-              <div className="space-y-3 md:space-y-4 lg:space-y-6">
-                <span className="text-[#438CAF] block mb-2 md:mb-4 opacity-100">Hub</span>
-                <a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">About</a>
-                <a href="#build" onClick={(e) => { e.preventDefault(); scrollTo('build'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Programs</a>
-                <Link to="/events" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Events</Link>
-                <a href="#community" onClick={(e) => { e.preventDefault(); scrollTo('community'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Community</a>
-                <a href="#cta" onClick={(e) => { e.preventDefault(); scrollTo('cta'); }} className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Join</a>
-              </div>
-              <div className="space-y-3 md:space-y-4 lg:space-y-6 col-span-1 md:col-span-1">
-                <span className="text-[#438CAF] block mb-2 md:mb-4 opacity-100">Connect</span>
-                <a
-                  href="#contact"
-                  className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all"
-                  onClick={(e) => { e.preventDefault(); setShowContactModal(true); }}
-                >
-                  Send a message
-                </a>
-                <a href="https://www.instagram.com/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Instagram</a>
-                <a href="https://www.linkedin.com/company/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">LinkedIn</a>
               </div>
             </div>
           </div>
-          
-          <div className="flex flex-col md:flex-row justify-between items-center pt-8 md:pt-12 border-t border-white/5 text-[9px] sm:text-[10px] md:text-xs font-black uppercase tracking-widest md:tracking-[0.3em] opacity-30 italic">
-            <div className="md:mt-0">&copy;2026 YOUTH INNOVATORS HUB (YIHUB).</div>
-            <div> Built with ❤️ in Kigali, Rwanda 🇷🇼 </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 text-xs text-white/30">
+            <div>&copy; 2026 Youth Innovators Hub (YIHUB)</div>
+            <div className="mt-2 md:mt-0">Built with care in Kigali, Rwanda</div>
           </div>
         </div>
       </footer>
