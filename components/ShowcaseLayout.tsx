@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Zap,
-  Terminal,
-  Instagram,
-  Linkedin,
-  MessageSquare,
-  Github,
-} from 'lucide-react';
+import { Menu, X, Instagram, Linkedin, MessageSquare, Github } from 'lucide-react';
+import { WHATSAPP_JOIN } from '../lib/moments';
 
 /**
  * Shared page shell for showcase pages (events, projects, schools).
- * Reuses the same navbar and footer styling from the main site.
+ * Matches the redesigned landing chrome.
  */
 const ShowcaseLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,103 +19,92 @@ const ShowcaseLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }, [isMenuOpen]);
 
   return (
-    <div className="min-h-screen bg-[#193441] selection:bg-[#438CAF] selection:text-white text-white">
-      {/* Navbar */}
+    <div className="min-h-screen bg-navy selection:bg-accent selection:text-white text-white font-body">
       <header>
         <nav
-          className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3 md:py-4 flex items-center justify-between bg-[#193441]/90 backdrop-blur-xl border-b border-white/5"
+          className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3 md:py-4 flex items-center justify-between bg-navy/90 backdrop-blur-xl border-b border-white/5"
           aria-label="Main navigation"
         >
-          <Link
-            to="/"
-            className="cursor-pointer hover:scale-105 transition-all duration-300 flex-shrink-0 inline-block"
-          >
+          <Link to="/" className="flex-shrink-0 inline-block">
             <img
               src="/logo.png"
               alt="Youth Innovators Hub (YIHUB) — Rwanda youth tech community"
-              className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain select-none"
+              className="h-9 sm:h-11 md:h-12 w-auto object-contain select-none"
             />
           </Link>
 
-          <div className="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest">
-            <Link to="/#about" className="group relative py-2 transition-all text-white hover:text-[#438CAF]">
+          <div className="hidden lg:flex items-center gap-8 text-sm font-semibold">
+            <Link to="/#about" className="text-white/70 hover:text-white transition-colors">
               About
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform" />
             </Link>
-            <Link to="/#build" className="group relative py-2 transition-all text-white hover:text-[#438CAF]">
-              What We Do
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform" />
+            <Link to="/#build" className="text-white/70 hover:text-white transition-colors">
+              What we do
             </Link>
-            <Link to="/events" className="group relative py-2 transition-all text-white hover:text-[#438CAF]">
-              Events
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform" />
-            </Link>
-            <Link to="/#community" className="group relative py-2 transition-all text-white hover:text-[#438CAF]">
+<Link to="/#community" className="text-white/70 hover:text-white transition-colors">
               Community
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-[#438CAF] transform scale-x-0 group-hover:scale-x-100 transition-transform" />
+            </Link>
+            <Link to="/gallery" className="text-white/70 hover:text-white transition-colors">
+              Gallery
             </Link>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <a
-              href="https://chat.whatsapp.com/DgU4FYHIqltLjGThwEIFZp"
+              href={WHATSAPP_JOIN}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white text-[#193441] px-6 md:px-8 py-2.5 font-black uppercase tracking-tighter rounded-full transform hover:scale-105 transition-all shadow-[4px_4px_0px_0px_#438CAF] active:shadow-none active:translate-y-1"
+              className="hidden sm:inline-flex bg-white text-navy px-5 py-2.5 text-sm font-display font-bold rounded-lg hover:bg-accent hover:text-white transition-colors"
             >
               Join the Hub
             </a>
             <button
-              className="lg:hidden p-2 text-white bg-white/10 rounded-full"
+              className="lg:hidden p-2.5 text-white bg-white/10 rounded-lg"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
             >
-              {isMenuOpen ? <Zap className="text-[#438CAF]" /> : <Terminal />}
+              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </nav>
 
-        {/* Mobile menu */}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="fixed inset-0 z-[55] bg-[#193441] pt-24 px-6 sm:px-10 flex flex-col lg:hidden"
+              exit={{ opacity: 0, y: -12 }}
+              className="fixed inset-0 z-[55] bg-navy pt-24 px-6 flex flex-col lg:hidden"
             >
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="absolute top-4 right-4 w-12 h-12 bg-[#438CAF] rounded-full flex items-center justify-center text-white hover:bg-[#438CAF]/80 transition-all"
+                className="absolute top-4 right-4 w-11 h-11 bg-accent rounded-lg flex items-center justify-center text-white"
                 aria-label="Close menu"
               >
-                <Zap size={24} />
+                <X size={22} />
               </button>
-
-              <div className="flex flex-col space-y-6 sm:space-y-8 mt-8">
+              <div className="flex flex-col gap-5 mt-6">
                 {[
                   { to: '/#about', label: 'About' },
-                  { to: '/#build', label: 'What We Do' },
-                  { to: '/events', label: 'Events' },
+                  { to: '/#build', label: 'What we do' },
                   { to: '/#community', label: 'Community' },
+                  { to: '/gallery', label: 'Gallery' },
                 ].map((item) => (
                   <Link
                     key={item.to}
                     to={item.to}
                     onClick={() => setIsMenuOpen(false)}
-                    className="text-3xl sm:text-4xl md:text-5xl font-black uppercase text-left tracking-tighter hover:text-[#438CAF] transition-colors"
+                    className="font-display text-3xl sm:text-4xl font-bold tracking-tight hover:text-accent transition-colors"
                   >
                     {item.label}
                   </Link>
                 ))}
               </div>
-
               <a
-                href="https://chat.whatsapp.com/DgU4FYHIqltLjGThwEIFZp"
+                href={WHATSAPP_JOIN}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-auto mb-8 w-full py-4 bg-[#438CAF] text-white font-black text-lg uppercase tracking-tighter rounded-xl text-center shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)]"
+                className="mt-auto mb-10 w-full py-4 bg-accent text-white font-display font-bold text-lg rounded-xl text-center"
               >
                 Join the Hub
               </a>
@@ -130,57 +113,112 @@ const ShowcaseLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =
         </AnimatePresence>
       </header>
 
-      {/* Page content */}
       <main className="pt-20 md:pt-24">{children}</main>
 
-      {/* Footer */}
       <footer
-        className="py-12 md:py-16 lg:py-24 px-4 md:px-8 lg:px-16 bg-[#193441] border-t-4 md:border-t-8 border-[#438CAF]"
+        className="py-14 md:py-20 px-5 md:px-8 lg:px-16 bg-navy border-t border-accent/40"
         role="contentinfo"
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row justify-between gap-10 md:gap-12 lg:gap-16 mb-12 md:mb-16 lg:mb-20">
-            <div className="max-w-md">
-              <Link to="/" className="inline-block hover:scale-105 transition-all duration-300">
-                <img src="/logo.png" alt="Youth Innovators Hub" className="h-12 md:h-14 lg:h-16 w-auto object-contain select-none" />
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row justify-between gap-12 mb-12">
+            <div className="max-w-sm">
+              <Link to="/" className="inline-block mb-5">
+                <img
+                  src="/logo.png"
+                  alt="Youth Innovators Hub"
+                  className="h-11 w-auto object-contain"
+                />
               </Link>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white/50 mb-6 md:mb-8 leading-tight italic">
-                Youth Innovators Hub — Rwanda's youth tech community where student builders ship real projects.
+              <p className="text-white/50 text-base leading-relaxed mb-6">
+                Youth Innovators Hub — Rwanda&apos;s youth tech community where student builders ship
+                real projects.
               </p>
-              <div className="flex gap-3 md:gap-4">
-                <a href="https://www.instagram.com/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10" aria-label="Instagram">
-                  <Instagram size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+              <div className="flex gap-2">
+                <a
+                  href="https://www.instagram.com/youthinnovatorshub/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-accent transition-colors border border-white/10"
+                  aria-label="Instagram"
+                >
+                  <Instagram size={18} />
                 </a>
-                <a href="https://www.linkedin.com/company/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10" aria-label="LinkedIn">
-                  <Linkedin size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                <a
+                  href="https://www.linkedin.com/company/youthinnovatorshub/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-accent transition-colors border border-white/10"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin size={18} />
                 </a>
-                <a href="https://wa.me/250791845268" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10" aria-label="WhatsApp">
-                  <MessageSquare size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                <a
+                  href="https://wa.me/250791845268"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-accent transition-colors border border-white/10"
+                  aria-label="WhatsApp"
+                >
+                  <MessageSquare size={18} />
                 </a>
-                <a href="https://github.com/Youth-Innovators-Hub/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center hover:bg-[#438CAF] hover:scale-110 transition-all border border-white/10" aria-label="Github">
-                  <Github size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                <a
+                  href="https://github.com/Youth-Innovators-Hub/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-accent transition-colors border border-white/10"
+                  aria-label="Github"
+                >
+                  <Github size={18} />
                 </a>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 lg:gap-16 text-[10px] sm:text-xs md:text-sm font-black uppercase tracking-wider md:tracking-widest">
-              <div className="space-y-3 md:space-y-4 lg:space-y-6">
-                <span className="text-[#438CAF] block mb-2 md:mb-4">Hub</span>
-                <Link to="/#about" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">About</Link>
-                <Link to="/#build" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Programs</Link>
-                <Link to="/events" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Events</Link>
-                <Link to="/#community" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Community</Link>
+            <div className="grid grid-cols-2 gap-10 text-sm">
+              <div className="space-y-3">
+                <span className="text-accent font-semibold block mb-3">Hub</span>
+                <Link to="/#about" className="block text-white/55 hover:text-accent transition-colors">
+                  About
+                </Link>
+                <Link to="/#build" className="block text-white/55 hover:text-accent transition-colors">
+                  Programs
+                </Link>
+<Link
+                  to="/#community"
+                  className="block text-white/55 hover:text-accent transition-colors"
+                >
+                  Community
+                </Link>
+                <Link
+                  to="/gallery"
+                  className="block text-white/55 hover:text-accent transition-colors"
+                >
+                  Gallery
+                </Link>
               </div>
-              <div className="space-y-3 md:space-y-4 lg:space-y-6">
-                <span className="text-[#438CAF] block mb-2 md:mb-4">Connect</span>
-                <a href="https://www.instagram.com/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">Instagram</a>
-                <a href="https://www.linkedin.com/company/youthinnovatorshub/" target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 hover:text-[#438CAF] transition-all">LinkedIn</a>
+              <div className="space-y-3">
+                <span className="text-accent font-semibold block mb-3">Connect</span>
+                <a
+                  href="https://www.instagram.com/youthinnovatorshub/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-white/55 hover:text-accent transition-colors"
+                >
+                  Instagram
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/youthinnovatorshub/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-white/55 hover:text-accent transition-colors"
+                >
+                  LinkedIn
+                </a>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between items-center pt-8 md:pt-12 border-t border-white/5 text-[9px] sm:text-[10px] md:text-xs font-black uppercase tracking-widest md:tracking-[0.3em] opacity-30 italic">
-            <div>&copy;2026 YOUTH INNOVATORS HUB (YIHUB).</div>
+          <div className="pt-8 border-t border-white/5 text-xs text-white/30">
+            &copy; 2026 Youth Innovators Hub (YIHUB)
           </div>
         </div>
       </footer>
