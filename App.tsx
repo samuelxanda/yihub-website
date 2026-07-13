@@ -524,47 +524,6 @@ const App: React.FC = () => {
           </div>
         </Section>
 
-        {/* Founder story */}
-        <Section id="founder-story" className="bg-navy py-20 md:py-28">
-          <div className="max-w-6xl mx-auto px-5 md:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              <div className="lg:col-span-7 lg:order-2">
-                <div className="photo-frame rounded-sm overflow-hidden group">
-                  <div className="overflow-hidden">
-                    <img
-                      src={FOUNDER_STORY.image}
-                      alt={FOUNDER_STORY.imageAlt}
-                      className="w-full aspect-[16/10] object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-5 lg:order-1">
-                <p className="text-accent text-xs font-semibold uppercase tracking-widest mb-3">
-                  {FOUNDER_STORY.label}
-                </p>
-                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-4 leading-snug">
-                  {FOUNDER_STORY.title}
-                </h2>
-                <p className="text-white/70 text-base sm:text-lg leading-relaxed mb-6">
-                  {FOUNDER_STORY.body}
-                </p>
-                <a
-                  href="#build"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollTo('build');
-                  }}
-                  className="inline-flex items-center gap-2 text-accent font-semibold hover:text-white transition-colors"
-                >
-                  See our programs
-                  <ArrowRight size={16} />
-                </a>
-              </div>
-            </div>
-          </div>
-        </Section>
-
         {/* Programs — editorial list */}
         <Section id="build" className="bg-navy py-20 md:py-28">
           <div className="max-w-4xl mx-auto px-5 md:px-8">
