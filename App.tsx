@@ -347,11 +347,11 @@ const App: React.FC = () => {
                 <br />
                 <span className="text-accent">tech &amp; innovation.</span>
               </h1>
-              <p className="text-lg sm:text-xl text-white/80 font-normal max-w-xl mb-10 leading-relaxed">
+              <p className="text-lg sm:text-xl text-white/80 font-normal max-w-xl mb-12 leading-relaxed">
                 We&apos;re a youth-led tech community in Rwanda — builders who learn by shipping real projects,{' '}
                 <span className="text-white border-b-2 border-accent">together.</span>
               </p>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5">
                 <a
                   href={WHATSAPP_JOIN}
                   target="_blank"
