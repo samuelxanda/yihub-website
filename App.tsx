@@ -321,23 +321,26 @@ const App: React.FC = () => {
 
       <main>
         {/* Hero */}
-        <Section id="home" className="min-h-screen flex flex-col justify-center relative p-0 overflow-hidden">
+        <Section id="home" className="min-h-screen relative p-0 overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img
               src={HERO_IMAGE.src}
               alt={HERO_IMAGE.alt}
               className="w-full h-full object-cover object-center"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/60 to-navy/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy/95 via-navy/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-navy/70 via-navy/20 to-transparent" />
           </div>
 
-          <div className="relative z-20 max-w-5xl mx-auto w-full px-5 sm:px-8 md:px-12 lg:px-16 py-28 md:py-32">
+          <div className="relative z-20 min-h-screen max-w-5xl mr-auto w-full pl-10 sm:pl-12 md:pl-16 lg:pl-24 xl:pl-28 pr-6 sm:pr-10 flex flex-col">
+            <div className="min-h-[32vh] sm:min-h-[34vh] flex-1" aria-hidden="true" />
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: 'easeOut' }}
+              className="max-w-3xl pb-16 md:pb-24"
             >
-              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-bold leading-[1.08] tracking-tight mb-5 max-w-3xl">
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-bold leading-[1.08] tracking-tight mb-6 md:mb-7">
                 Shaping tomorrow
                 <br />
                 through
@@ -740,9 +743,8 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 text-xs text-white/30">
+          <div className="pt-8 border-t border-white/5 text-xs text-white/30">
             <div>&copy; 2026 Youth Innovators Hub (YIHUB)</div>
-            <div className="mt-2 md:mt-0">Built with care in Kigali, Rwanda</div>
           </div>
         </div>
       </footer>
