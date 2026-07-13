@@ -1,27 +1,20 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- SEO title update: Brand name first, clear value prop, location -->
     <title>Youth Innovators Hub (YIHUB) — Rwanda's Youth Tech & Builders Community</title>
-
-    <!-- Meta description update: Human, community-first, keyword-relevant, no stuffing -->
     <meta name="description" content="Youth Innovators Hub (YIHUB) is a student-led tech community in Rwanda. We run hackathons, workshops, and build real projects together. Join the builders." />
 
-    <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://youthinnovatorshub.tech/" />
 
-    <!-- Open Graph / Social sharing -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Youth Innovators Hub" />
     <meta property="og:title" content="Youth Innovators Hub (YIHUB) — Rwanda's Youth Tech & Builders Community" />
@@ -30,24 +23,18 @@
     <meta property="og:image" content="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769309314/IMG_6025_t1itto.jpg" />
     <meta property="og:locale" content="en_RW" />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Youth Innovators Hub (YIHUB) — Rwanda's Youth Tech & Builders Community" />
     <meta name="twitter:description" content="A student-led tech community in Rwanda. Hackathons, workshops, real projects. Built for builders, by builders." />
     <meta name="twitter:image" content="https://res.cloudinary.com/djxxw3ppc/image/upload/v1769309314/IMG_6025_t1itto.jpg" />
 
-    <!-- Geo targeting (subtle) -->
     <meta name="geo.region" content="RW" />
     <meta name="geo.placename" content="Kigali, Rwanda" />
-
-    <!-- Robots -->
     <meta name="robots" content="index, follow" />
 
-    <!-- Hreflang for regional targeting -->
     <link rel="alternate" hreflang="en" href="https://youthinnovatorshub.tech/" />
     <link rel="alternate" hreflang="x-default" href="https://youthinnovatorshub.tech/" />
 
-    <!-- Schema.org Organization + WebSite structured data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -137,55 +124,76 @@
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              navy: '#193441',
+              accent: '#438CAF',
+              paper: '#F3EDE3',
+            },
+            fontFamily: {
+              display: ['"Bricolage Grotesque"', 'sans-serif'],
+              body: ['"Source Sans 3"', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
     <link rel="stylesheet" href="public/custom.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <style>
       :root {
         --brand-blue: #438CAF;
         --dark-bg: #193441;
+        --paper: #F3EDE3;
+        --font-display: 'Bricolage Grotesque', sans-serif;
+        --font-body: 'Source Sans 3', sans-serif;
+        --radius-sm: 0.5rem;
+        --radius-md: 0.75rem;
+        --radius-lg: 1rem;
+        --shadow-signature: 0 12px 40px rgba(0, 0, 0, 0.25);
       }
       body {
-        font-family: 'Inter', sans-serif;
+        font-family: var(--font-body);
         background-color: var(--dark-bg);
         color: white;
         overflow-x: hidden;
+      }
+      .font-display {
+        font-family: var(--font-display);
+      }
+      .font-body {
+        font-family: var(--font-body);
+      }
+      .photo-frame {
+        background: var(--paper);
+        padding: 0.4rem;
+        box-shadow: var(--shadow-signature);
       }
       ::selection {
         background-color: var(--brand-blue);
         color: white;
       }
       ::-webkit-scrollbar {
-        width: 10px;
+        width: 8px;
       }
       ::-webkit-scrollbar-track {
         background: var(--dark-bg);
       }
       ::-webkit-scrollbar-thumb {
         background: var(--brand-blue);
-        border-radius: 10px;
-        border: 2px solid var(--dark-bg);
+        border-radius: 8px;
       }
-      @keyframes float {
-        0% { transform: translateY(0px) rotate(var(--tw-rotate, 0deg)); }
-        50% { transform: translateY(-10px) rotate(calc(var(--tw-rotate, 0deg) + 2deg)); }
-        100% { transform: translateY(0px) rotate(var(--tw-rotate, 0deg)); }
-      }
-      .animate-float {
-        animation: float 4s ease-in-out infinite;
-      }
-      .flag-hanging {
-        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%);
-      }
-      .card-shadow {
-        box-shadow: 8px 8px 0px 0px rgba(67, 140, 175, 0.3);
-      }
-      .btn-shadow {
-        box-shadow: 4px 4px 0px 0px white;
-      }
-      .btn-shadow:hover {
-        box-shadow: 6px 6px 0px 0px white;
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
       }
     </style>
   <script type="importmap">
