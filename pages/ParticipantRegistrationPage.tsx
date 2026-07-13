@@ -9,11 +9,8 @@ import {
   UserPlus,
 } from 'lucide-react';
 import ShowcaseLayout from '../components/ShowcaseLayout';
-import { getEventWithProjects } from '../lib/api';
+import { getEventWithProjects, postJSON } from '../lib/api';
 import type { EventSummary } from '../lib/showcase-types';
-
-
-const API = '/.netlify/functions';
 
 const ParticipantRegistrationPage: React.FC = () => {
   const { eventSlug } = useParams<{ eventSlug: string }>();
@@ -62,27 +59,17 @@ const ParticipantRegistrationPage: React.FC = () => {
     const extraInfo = extraParts.join('\n') || undefined;
 
     try {
-      const res = await fetch(`${API}/register-participant`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          eventSlug,
-          name: name.trim(),
-          email: email.trim(),
-          school: school.trim(),
-          extraInfo,
-        }),
+      const data = await postJSON<{ message: string }>('/register-participant', {
+        eventSlug,
+        name: name.trim(),
+        email: email.trim(),
+        school: school.trim(),
+        extraInfo,
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        if (data.details) setFieldErrors(data.details);
-        throw new Error(data.error ?? 'Registration failed');
-      }
 
       setSuccess(data.message);
     } catch (err: any) {
+      if (err.details) setFieldErrors(err.details);
       setFormError(err.message);
     } finally {
       setSubmitting(false);

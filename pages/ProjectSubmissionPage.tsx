@@ -12,11 +12,8 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import ShowcaseLayout from '../components/ShowcaseLayout';
-import { getEventWithProjects, checkRegistration } from '../lib/api';
+import { getEventWithProjects, checkRegistration, postJSON } from '../lib/api';
 import type { EventSummary } from '../lib/showcase-types';
-
-
-const API = '/.netlify/functions';
 
 const CATEGORY_OPTIONS = [
   'AI/ML',
@@ -158,38 +155,29 @@ const ProjectSubmissionPage: React.FC = () => {
     setSubmitting(true);
 
     try {
-      const res = await fetch(`${API}/submit-project`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          eventSlug,
-          title: title.trim(),
-          shortDescription: shortDescription.trim(),
-          fullDescription: fullDescription.trim() || undefined,
-          category: categories,
-          projectUrl: projectUrl.trim() || undefined,
-          githubUrl: githubUrl.trim() || undefined,
-          thumbnailUrl: thumbnailUrl.trim() || undefined,
-          school: school.trim(),
-          teamLeadEmail: teamLeadEmail.trim(),
-          teamMemberEmails,
-        }),
+      const data = await postJSON<{
+        message: string;
+        project?: { slug: string };
+      }>('/submit-project', {
+        eventSlug,
+        title: title.trim(),
+        shortDescription: shortDescription.trim(),
+        fullDescription: fullDescription.trim() || undefined,
+        category: categories,
+        projectUrl: projectUrl.trim() || undefined,
+        githubUrl: githubUrl.trim() || undefined,
+        thumbnailUrl: thumbnailUrl.trim() || undefined,
+        school: school.trim(),
+        teamLeadEmail: teamLeadEmail.trim(),
+        teamMemberEmails,
       });
-
-      const data = await res.json();
-
-      if (res.status === 403) {
-        setSubmissionClosed(true);
-        throw new Error(data.message ?? data.error);
-      }
-
-      if (!res.ok) {
-        if (data.details) setFieldErrors(data.details);
-        throw new Error(data.error ?? 'Submission failed');
-      }
 
       setSuccess({ message: data.message, slug: data.project?.slug ?? '' });
     } catch (err: any) {
+      if (err.status === 403) {
+        setSubmissionClosed(true);
+      }
+      if (err.details) setFieldErrors(err.details);
       setFormError(err.message);
     } finally {
       setSubmitting(false);
