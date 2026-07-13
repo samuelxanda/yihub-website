@@ -10,7 +10,7 @@ export interface EventSummary {
   startDate: string;
   endDate: string | null;
   location: string | null;
-  status: 'Upcoming' | 'Live' | 'Past';
+  status: 'Upcoming' | 'Live' | 'Past' | 'Hidden';
   submissionOpen: boolean;
   description: string | null;
   coverImageUrl: string | null;

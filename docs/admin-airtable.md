@@ -35,7 +35,7 @@ Create the following three tables in your Airtable base:
 | `startDate`      | Date             | ✅       | When the event starts                                          |
 | `endDate`        | Date             |          | When the event ends (leave blank for single-day)               |
 | `location`       | Single line text |          | e.g. "ALU Rwanda, Kigali"                                      |
-| `status`         | Single select    | ✅       | Options: **Upcoming**, **Live**, **Past**                      |
+| `status`         | Single select    | ✅       | Options: **Upcoming**, **Live**, **Past**, **Hidden** (removes from site) |
 | `submissionOpen` | Checkbox         |          | Tick when project submissions are open                         |
 | `description`    | Long text        |          | Short paragraph shown on the events list and event detail page |
 | `coverImageUrl`  | URL              |          | Link to a Cloudinary (or any CDN) image for the event banner   |
@@ -148,3 +148,8 @@ Event and project pages are client-rendered. For better SEO in the future, consi
 
 **Q: How do I take down a project?**
 Change its `status` to **Hidden** in Airtable. It will disappear from all pages immediately.
+
+**Q: How do I hide an event from the website?**
+Set the event's `status` to **Hidden** in Airtable. It will disappear from `/events` and direct links to `/events/:slug` return 404. Registration and project submission for that event are blocked too. Switch back to **Upcoming**, **Live**, or **Past** to publish it again.
+
+Add **Hidden** as an option on the Events `status` single-select field if it is not there yet.
