@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface SectionProps {
@@ -9,14 +8,14 @@ interface SectionProps {
   dark?: boolean;
 }
 
-const Section: React.FC<SectionProps> = ({ id, children, className = "", title, dark = false }) => {
+const Section: React.FC<SectionProps> = ({ id, children, className = '', title, dark = false }) => {
   return (
-    <section 
-      id={id} 
-      className={`relative py-24 px-6 md:px-12 lg:px-24 overflow-hidden ${dark ? 'bg-[#193441]' : ''} ${className}`}
+    <section
+      id={id}
+      className={`relative overflow-hidden ${dark ? 'bg-navy' : ''} ${className}`}
     >
       {title && (
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-16 tracking-tighter text-white">
+        <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-12 md:mb-16 tracking-tight text-white max-w-6xl mx-auto px-5 md:px-8">
           {title}
         </h2>
       )}

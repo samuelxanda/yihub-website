@@ -1,12 +1,15 @@
-
-import React from 'react';
-import { Rocket, Code, Users, Zap, Terminal, Heart, Star, Globe } from 'lucide-react';
 import { Achievement, Activity, Event } from './types';
 
 export const COLORS = {
   background: '#193441',
   accent: '#438CAF',
   text: '#FFFFFF',
+};
+
+/** One honest number for the community section (LinkedIn-backed Game Jam). */
+export const COMMUNITY_STAT = {
+  value: '200+',
+  label: 'young people at our Game Jam',
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
