@@ -18,7 +18,7 @@ export interface Moment {
 }
 
 export const WHATSAPP_JOIN =
-  'https://chat.whatsapp.com/DgU4FYHIqltLjGThwEIFZp';
+  'https://chat.whatsapp.com/JEzrtuQG6pP98HNL61NWoC';
 
 const gameJam = galleryImageById('game-jam-hero');
 
